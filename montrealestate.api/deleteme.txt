@@ -1,0 +1,5 @@
+siema, w tym folderze mozesz zrobic backend
+
+https://blog.logrocket.com/django-rest-framework-create-api/
+tu znalazłem jakis fajny tutorial jak zrobic rest api w django
+sporo rzeczy sie robi tak samo jak na labach wiec mozesz sie tym wspomagac
