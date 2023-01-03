@@ -5,49 +5,47 @@
 .btn {
   display: inline-block;
   padding: 4px 10px;
+  cursor: pointer;
 }
 
 .btn-primary {
-  background: #034694;
+  @apply bg-primary border-primary;
   border-width: 2px;
   border-style: solid;
-  border-color: #034694;
   border-radius: 5px;
   color: #fff;
-  transition: 0.2s;
+  transition: 200ms;
 }
 
 .btn-primary:hover {
-  background: #033A80;
-  border-color: #033A80;
-  transition: 0.2s;
+  @apply bg-primary-hover border-primary-hover;
+  color: #eee;
+  transition: 200ms;
 }
 
 .btn-primary:active {
-  background: #022E61;
-  border-color: #022E61;
-  color: #f0f0f0;
-  transition: 0.2s;
+  @apply bg-primary-active border-primary-active;
+  color: #ddd;
+  transition: 200ms;
 }
 
 .btn-secondary {
+  @apply text-primary border-primary;
   background: #fff;
   border-width: 2px;
   border-style: solid;
-  border-color: #034694;
   border-radius: 5px;
-  color: #034694;
-  transition: 0.2s;
+  transition: 200ms;
 }
 
 .btn-secondary:hover {
-  background: #eee;;
-  transition: 0.2s;
+  @apply text-primary-hover border-primary-hover;
+  background: #eee;
+  transition: 200ms;
 }
 
 .btn-secondary:active {
+  @apply text-primary-active border-primary-active;
   background: #ddd;
-  border-color: #022E61;
-  color: #022E61;
-  transition: 0.2s;
+  transition: 200ms;
 }
