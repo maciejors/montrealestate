@@ -1,3 +1,53 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.btn {
+  display: inline-block;
+  padding: 4px 10px;
+}
+
+.btn-primary {
+  background: #034694;
+  border-width: 2px;
+  border-style: solid;
+  border-color: #034694;
+  border-radius: 5px;
+  color: #fff;
+  transition: 0.2s;
+}
+
+.btn-primary:hover {
+  background: #033A80;
+  border-color: #033A80;
+  transition: 0.2s;
+}
+
+.btn-primary:active {
+  background: #022E61;
+  border-color: #022E61;
+  color: #f0f0f0;
+  transition: 0.2s;
+}
+
+.btn-secondary {
+  background: #fff;
+  border-width: 2px;
+  border-style: solid;
+  border-color: #034694;
+  border-radius: 5px;
+  color: #034694;
+  transition: 0.2s;
+}
+
+.btn-secondary:hover {
+  background: #eee;;
+  transition: 0.2s;
+}
+
+.btn-secondary:active {
+  background: #ddd;
+  border-color: #022E61;
+  color: #022E61;
+  transition: 0.2s;
+}
