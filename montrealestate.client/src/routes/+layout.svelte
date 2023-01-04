@@ -11,5 +11,9 @@
 </script>
 
 <Navbar items={ navbarItems } />
-<slot />
+<main class="flex flex-col justify-center items-center
+  pt-10 px-6 sm:px-12 lg:px-20 xl:px-36"
+>
+  <slot />
+</main>
 <Footer />
