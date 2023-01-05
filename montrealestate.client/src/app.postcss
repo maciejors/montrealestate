@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.card {
+	background: #fff;
+	padding: 20px;
+	border-radius: 6px;
+	box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+	border: 1px solid #f6f6f6;
+}
+
+.btn {
+	display: inline-block;
+	padding: 4px 10px;
+	cursor: pointer;
+}
+
+.btn-primary {
+	@apply bg-primary border-primary;
+	border-width: 2px;
+	border-style: solid;
+	border-radius: 0.25rem;
+	color: #fff;
+	transition: 200ms;
+}
+
+.btn-primary:hover {
+	@apply bg-primary-hover border-primary-hover;
+	color: #eee;
+	transition: 200ms;
+}
+
+.btn-primary:active {
+	@apply bg-primary-active border-primary-active;
+	color: #ddd;
+	transition: 200ms;
+}
+
+.btn-secondary {
+	@apply text-primary border-primary;
+	background: #fff;
+	border-width: 2px;
+	border-style: solid;
+	border-radius: 0.25rem;
+	transition: 200ms;
+}
+
+.btn-secondary:hover {
+	@apply text-primary-hover border-primary-hover;
+	background: #eee;
+	transition: 200ms;
+}
+
+.btn-secondary:active {
+	@apply text-primary-active border-primary-active;
+	background: #ddd;
+	transition: 200ms;
+}

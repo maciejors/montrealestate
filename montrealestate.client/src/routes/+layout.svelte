@@ -1,5 +1,5 @@
 <script lang="ts">
-  import "../app.css";
+  import "../app.postcss";
   import type NavbarTileItem from "../interfaces/NavbarTileItem";
   import Navbar from "../components/Navbar.svelte";
   import Footer from "../components/Footer.svelte";
