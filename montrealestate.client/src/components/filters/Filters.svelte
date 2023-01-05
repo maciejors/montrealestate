@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type Filters from "../interfaces/Filters";
+  import type Filters from "../../interfaces/Filters";
   import MinMaxFilter from "./MinMaxFilter.svelte";
 
   export let filtersAsCols: boolean = true;

@@ -1,7 +1,7 @@
 <script lang="ts">
   import "../app.postcss";
   import type NavbarTileItem from "../interfaces/NavbarTileItem";
-  import Navbar from "../components/Navbar.svelte";
+  import Navbar from "../components/nav/Navbar.svelte";
   import Footer from "../components/Footer.svelte";
 
   const navbarItems: NavbarTileItem[] = [

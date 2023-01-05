@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type NavbarTileItem from "../interfaces/NavbarTileItem";
+  import type NavbarTileItem from "../../interfaces/NavbarTileItem";
   import NavbarTile from "./NavbarTile.svelte";
 
   export let items: NavbarTileItem[];

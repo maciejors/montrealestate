@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Filters from "../components/Filters.svelte";
+  import Filters from "../components/filters/Filters.svelte";
   import Container from "../shared/Container.svelte";
 </script>
 
