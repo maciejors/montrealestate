@@ -11,6 +11,9 @@ module.exports = {
         'primary-hover': '#033A80', 
         'primary-active': '#022E61', 
       },
+      backgroundImage: {
+        'home': "url('https://picsum.photos/id/223/1920/1080')"
+      }
     },
   },
 }
