@@ -168,3 +168,4 @@ internal
 *.tgz
 .eslintcache
 .svelte-kit
+*.raml
