@@ -1,13 +1,38 @@
 <script lang="ts">
-  import Filters from "../components/filters/Filters.svelte";
-  import Container from "../shared/Container.svelte";
+  import { goto } from "$app/navigation";
+  import { filtersStore } from "../stores/filtersStore";
+  import Container from "../components/Container.svelte";
+  import SelectBoxFilter from "../components/filters/SelectBoxFilter.svelte";
+
+  let allCities: string[] = ['montreal', 'warsaw'];
+  let selectedCity: string | null = null;
+  
+  function onCitySelect() {
+    filtersStore.update(filters => {
+      filters.city = selectedCity;
+      return filters;
+    }); 
+  }
+
+  function search() {
+    goto('/listings');
+  }
 </script>
 
 <main class="bg-home bg-auto">
   <Container>
-    <h1 class="text-3xl text-white font-bold pb-4">Montreal is Real</h1>
-    <div class="card p-4">
-      <Filters />
+    <h1 class="text-3xl text-white font-bold mb-2 text-center">Montreal is Real</h1>
+    <h3 class="text-xl text-white mb-8 text-center">No. 1 property website for Montreal and surrounding areas</h3>
+    <div class="card p-4 flex flex-row gap-x-2 items-center">
+      <p>Explore by city:</p>
+      <SelectBoxFilter items={allCities} bind:value={selectedCity} on:valueChanged={onCitySelect} />
+      <button 
+        class="btn btn-primary h-8" 
+        disabled={selectedCity === null}
+        on:click={search}
+      >
+        Search
+    </button>
     </div>
   </Container>
 </main>

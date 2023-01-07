@@ -1,35 +1,41 @@
 <script lang="ts">
+  import { onMount, createEventDispatcher } from "svelte";
+  import { filtersStore } from "../../stores/filtersStore";
   import type Filters from "../../interfaces/Filters";
   import MinMaxFilter from "./MinMaxFilter.svelte";
+  import SelectBoxFilter from "./SelectBoxFilter.svelte";
 
-  export let filtersAsCols: boolean = true;
+  const dispatch = createEventDispatcher();
 
-  const filters: Filters = {
-    priceMin: null,
-    priceMax: null,
-  }
+  let allCities: string[] = [];
+  let allDistricts: string[] = [];
+  let allWalkScoresMapped: string[] = [];
+  let allCategories: string[] = [];
+
+  onMount(async () => {
+    allCities = ['montreal', 'warsaw'];
+    allDistricts = ['west', 'east'];
+    allWalkScoresMapped = ['walkscore1', 'walkscore2'];
+    allCategories = ['semi-detached', 'ruins'];
+  });
 
   function resetFilters() {
-    filters.priceMin = null;
-    filters.priceMax = null;
+    for (const filterName of Object.keys($filtersStore)) {
+      $filtersStore[filterName as keyof Filters] = null; 
+    }
   }
 
   function applyFilters() {
-    console.log(filters);
+    dispatch('applyFilters');
   }
 </script>
 
 <section class="flex flex-col gap-y-3">
-  <div class="flex gap-3 flex-wrap" class:flex-col={filtersAsCols}>
+  <div class="grid">
     <MinMaxFilter 
       label="Price (CAD):" 
-      bind:min={filters.priceMin} 
-      bind:max={filters.priceMax} 
-    />
-    <MinMaxFilter 
-      label="Price (CAD):" 
-      bind:min={filters.priceMin} 
-      bind:max={filters.priceMax} 
+      bind:min={$filtersStore.minPrice} 
+      bind:max={$filtersStore.maxPrice} 
     />
   </div>
   <div class="flex flex-row justify-center gap-x-3">
@@ -37,7 +43,7 @@
       Clear filters
     </button>
     <button on:click={ applyFilters } class="btn btn-primary">
-      Search
+      Apply filters
     </button>
   </div>
 </section>

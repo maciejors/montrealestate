@@ -1,5 +1,5 @@
 <script>
-	import Container from "../../shared/Container.svelte";
+	import Container from "../../components/Container.svelte";
 </script>
 
 <div>
