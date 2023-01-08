@@ -4,12 +4,18 @@
 
 <script lang="ts">
   import { goto } from "$app/navigation";
+  import { onMount } from "svelte";
   import { filtersStore } from "../stores/filtersStore";
   import Container from "../components/Container.svelte";
   import SelectBoxFilter from "../components/filters/SelectBoxFilter.svelte";
+  import { getAllCities } from "../database/listings";
 
-  let allCities: string[] = ['montreal', 'warsaw'];
-  let selectedCity: string | null = null;
+  let allCities: string[] = [];
+  let selectedCity: string = '';
+
+  onMount(async () => {
+    allCities = await getAllCities();
+  });
   
   function onCitySelect() {
     filtersStore.update(filters => {
@@ -28,11 +34,10 @@
     <h1 class="text-3xl text-white font-bold mb-2 text-center">Montreal is Real</h1>
     <h3 class="text-xl text-white mb-8 text-center">No. 1 property website for Montreal and surrounding areas</h3>
     <div class="card p-4 flex flex-row gap-x-2 items-center">
-      <p>Explore by city:</p>
-      <SelectBoxFilter items={allCities} bind:value={selectedCity} on:valueChanged={onCitySelect} />
+      <SelectBoxFilter label="Explore by city:" items={allCities} bind:value={selectedCity} on:valueChanged={onCitySelect} />
       <button 
         class="btn btn-primary h-8" 
-        disabled={selectedCity === null}
+        disabled={selectedCity === ''}
         on:click={search}
       >
         Search

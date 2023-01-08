@@ -1,19 +1,24 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
 
+  export let label: string = '';
   export let items: string[];
   export let value: string | null = null;
+  export let hidden: boolean = false;
 
   const dispatch = createEventDispatcher();
 </script>
 
-<select 
-  name="selectBox" 
-  bind:value={value} 
-  on:change={() => dispatch('valueChanged')} 
-  class="py-0 h-8 rounded border-1 focus:border-primary"
->
-  {#each items as item}
-    <option value={item}>{ item }</option>
-  {/each}
-</select>
+<div class="flex flex-row items-center gap-x-2" class:hidden={hidden}>
+  <p class="inline-block">{ label }</p>
+  <select 
+    name="selectBox"
+    bind:value={value} 
+    on:change={() => dispatch('valueChanged')} 
+    class="py-0 h-8 rounded border-1 focus:border-primary focus:ring-primary cursor-pointer"
+  >
+    {#each items as item}
+      <option value={item}>{ item }</option>
+    {/each}
+  </select>
+</div>

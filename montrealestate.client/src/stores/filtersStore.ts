@@ -1,29 +1,6 @@
-import type Filters from 'src/interfaces/Filters';
+import type { FiltersType } from '../types/Filters';
+import { FiltersClass } from '../types/Filters';
 import { writable } from 'svelte/store';
 
-const filters: Filters = {
-	city: null,
-	district: null,
-	categories: null,
-	minPrice: null,
-	maxPrice: null,
-	minFloorArea: null,
-	maxFloorArea: null,
-	minConstructionYear: null,
-	maxConstructionYear: null,
-	minRooms: null,
-	maxRooms: null,
-	minBedrooms: null,
-	maxBedrooms: null,
-	minBathroomsWithShower: null,
-	maxBathroomsWithShower: null,
-	minBathroomsWithBath: null,
-	maxBathroomsWithBath: null,
-	minGarages: null,
-	maxGarages: null,
-	minParkingLots: null,
-	maxParkingLots: null,
-	isNew: null,
-	walkScoreMapped: null,
-};
+const filters: FiltersType = new FiltersClass();
 export const filtersStore = writable(filters);

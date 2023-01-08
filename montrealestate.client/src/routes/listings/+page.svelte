@@ -3,15 +3,25 @@
 </svelte:head>
 
 <script lang="ts">
-  import { error } from "@sveltejs/kit";
 	import { onDestroy } from "svelte";
-  import type Filters from "../../interfaces/Filters";
+  import type { FiltersType } from "../../types/Filters";
   import { filtersStore } from "../../stores/filtersStore";
+  import Container from "../../components/Container.svelte";
+	import Filters from "../../components/filters/Filters.svelte";
 
-  let filters: Filters;
+  let filters: FiltersType;
+  let hideFilters = false;
 
   const unsubscribe = filtersStore.subscribe(storedFilters => filters = storedFilters);
 
   onDestroy(unsubscribe);
 </script>
-<h1 class="text-3xl">city: { filters.city }</h1>
+
+<Container>
+  <div class="flex flex-row justify-center gap-x-3 mt-4">
+    <button on:click={() => hideFilters = false} class="btn btn-secondary w-28">
+      Show filters
+    </button>
+  </div>
+  <Filters bind:hidden={hideFilters} />
+</Container>
