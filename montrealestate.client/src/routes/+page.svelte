@@ -29,7 +29,7 @@
   }
 </script>
 
-<main class="bg-home bg-auto">
+<main class="bg-home bg-auto py-10">
   <Container>
     <h1 class="text-3xl text-white font-bold mb-2 text-center">Montreal is Real</h1>
     <h3 class="text-xl text-white mb-8 text-center">No. 1 property website for Montreal and surrounding areas</h3>
