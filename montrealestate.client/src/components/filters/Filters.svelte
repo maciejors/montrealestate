@@ -7,8 +7,6 @@
   import CategorySelectFilter from "./CategorySelectFilter.svelte";
 	import { getAllCategories, getAllCities, getAllDistricts, getAllWalkScoresMapped } from "../../database/listings";
 
-  export let hidden: boolean = false;
-
   const dispatch = createEventDispatcher();
 
   let allCities: string[] = [];
@@ -37,10 +35,6 @@
     } else {
       allDistricts = [];
     }
-  }
-
-  function hideFilters() {
-    hidden = true;
   }
 
   function onResetFilters() {
@@ -73,7 +67,7 @@
   }
 </script>
 
-<section class="flex flex-col gap-y-3" class:hidden={hidden}>
+<section class="flex flex-col gap-y-3">
   <div class="grid gap-y-4 gap-x-20 items-center
     grid-cols-1 xl:grid-cols-2"
   >
@@ -145,7 +139,7 @@
       bind:value={$filtersStore.walkScoreMapped}
     />
   </div>
-  <div class="flex flex-row justify-center gap-x-3 mt-4" class:hidden={hidden}>
+  <div class="flex flex-row justify-end gap-x-3 mt-4">
     <button on:click={ onResetFilters } class="btn btn-secondary w-28">
       Clear filters
     </button>

@@ -1,20 +1,11 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
-
   export let label: string = '';
   export let value: boolean = true;
-
-  const dispatch = createEventDispatcher();
-
-  function onValueChange() {
-    dispatch('valueChange', {newValue: value})
-  }
 </script>
 
 <div class="flex flex-row items-center gap-x-2">
   <input 
     type="checkbox" bind:checked={value}
-    on:change={onValueChange}
     class="py-0 h-6 w-6 rounded border-1
       hover:bg-gray-100
       focus:ring-0 focus:ring-offset-0

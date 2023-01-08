@@ -16,14 +16,16 @@
   const dispatch = createEventDispatcher();
 
   $: selectedItemsCount = appliedCategories.length;
-  $: buttonLabel = `${selectedItemsCount}/${categories.length} selected`
+  $: buttonLabel = `${selectedItemsCount} of ${categories.length} selected`
   // categories selected by the user
   let items: CategoryFilterItem[] = categories.map(catg => ({ name: catg, selected: appliedCategories.includes(catg) }));
   
-  let modalHidden = false;
+  let modalVisible = false;
+  let errorVisible = false;
 
   function showModal() {
-    modalHidden = false;
+    modalVisible = true;
+    errorVisible = false;
     // reset items array to reflect currently applied filters
     items = categories.map(catg => ({ name: catg, selected: appliedCategories.includes(catg) }));
   }
@@ -32,39 +34,37 @@
     items.forEach(item => item.selected = false);
     // refresh checkboxes
     items = [...items];
-    console.log(items);    
   }
 
   function onSelectAll() {
     items.forEach(item => item.selected = true);
     // refresh checkboxes
     items = [...items];
-    console.log(items);    
   }
 
   function cancel() {
-    modalHidden = true;
+    modalVisible = false;
   }
 
   function applyCategories() {
-    modalHidden = true;
     let selectedCategories = items
       .filter(i => i.selected)
       .map(i => i.name);
-    appliedCategories = selectedCategories;
-  }
-
-  function onItemValueChange(item: CategoryFilterItem) {    
-    console.log(`${item.name}, ${item.selected}`);
+    if (selectedCategories.length > 0) {
+      modalVisible = false;
+      appliedCategories = selectedCategories;
+    } else {
+      errorVisible = true;
+    }
   }
 </script>
 
 <div class="flex flex-row items-center gap-x-2">
   <p>Categories:</p>
-  <button class="btn border border-gray-500 bg-white hover:bg-gray-100 rounded w-32 h-8" on:click={showModal}>{ buttonLabel }</button>
+  <button class="btn border border-gray-500 bg-white hover:bg-gray-100 rounded px-2 h-8" on:click={showModal}>{ buttonLabel }</button>
 </div>
-<Modal hidden={modalHidden}>
-  <div class="card flex flex-col justify-center gap-y-4 items-center">
+<Modal visible={modalVisible}>
+  <div class="card flex flex-col justify-center items-center">
     <div class="w-full flex flex-row justify-between items-center">
       <p class="font-bold">Select categories:</p>
       <button 
@@ -73,12 +73,14 @@
         text-primary hover:text-primary-hover active:text-primary-active"
       >X</button>
     </div>
-    <div class="grid grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-4">
+    <div class="flex flex-row w-full justify-start text-sm text-red-500" class:hidden={!errorVisible}>
+      <p>Please select at least one category</p>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-4 my-4">
       {#each items as item (item.name)}
         <CheckboxFilter 
           label={item.name} 
           bind:value={item.selected}
-          on:valueChange={() => onItemValueChange(item)}
         />
       {/each}
     </div>
