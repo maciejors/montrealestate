@@ -10,7 +10,15 @@
 	import Filters from "../../components/filters/Filters.svelte";
 
   let filters: FiltersType;
-  let hideFilters = false;
+  let filtersHidden = false;
+
+  function showFilters() {
+    filtersHidden = false;
+  }
+
+  function hideFilters() {
+    filtersHidden = true;
+  }
 
   const unsubscribe = filtersStore.subscribe(storedFilters => filters = storedFilters);
 
@@ -19,9 +27,11 @@
 
 <Container>
   <div class="flex flex-row justify-center gap-x-3 mt-4">
-    <button on:click={() => hideFilters = false} class="btn btn-secondary w-28">
-      Show filters
-    </button>
+    {#if filtersHidden}
+      <button on:click={showFilters} class="btn btn-secondary w-28">Show filters</button>
+    {:else}
+      <button on:click={hideFilters} class="btn btn-secondary w-28">Hide filters</button>
+    {/if}
   </div>
-  <Filters bind:hidden={hideFilters} />
+  <Filters bind:hidden={filtersHidden} />
 </Container>

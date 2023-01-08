@@ -15,7 +15,8 @@
     name="selectBox"
     bind:value={value} 
     on:change={() => dispatch('valueChanged')} 
-    class="py-0 h-8 rounded border-1 focus:border-primary focus:ring-primary cursor-pointer"
+    class="py-0 h-8 cursor-pointer rounded border-1 focus:border-primary focus:ring-primary
+      hover:bg-gray-100"
   >
     {#each items as item}
       <option value={item}>{ item }</option>

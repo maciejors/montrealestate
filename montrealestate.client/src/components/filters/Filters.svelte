@@ -26,7 +26,7 @@
     }
     allWalkScoresMapped = await getAllWalkScoresMapped();
     allCategories = await getAllCategories();
-    $filtersStore.categories = allCategories;
+    $filtersStore.categories = [...allCategories];
   });
 
   async function onCityChange() {
@@ -46,7 +46,7 @@
   function onResetFilters() {
     $filtersStore.city = '';
 		$filtersStore.district = '';
-		$filtersStore.categories = allCategories;
+		$filtersStore.categories = [...allCategories];
 		$filtersStore.minPrice = null;
 		$filtersStore.maxPrice = null;
 		$filtersStore.minFloorArea = null;
@@ -92,8 +92,8 @@
       />
     </div>
     <CategorySelectFilter
-      bind:items={allCategories}
-      bind:selectedItems={$filtersStore.categories}
+      bind:categories={allCategories}
+      bind:appliedCategories={$filtersStore.categories}
     />
     <MinMaxFilter 
       label="Price (CAD):" 
@@ -146,9 +146,6 @@
     />
   </div>
   <div class="flex flex-row justify-center gap-x-3 mt-4" class:hidden={hidden}>
-    <button on:click={ hideFilters } class="btn btn-secondary w-28">
-      Hide filters
-    </button>
     <button on:click={ onResetFilters } class="btn btn-secondary w-28">
       Clear filters
     </button>

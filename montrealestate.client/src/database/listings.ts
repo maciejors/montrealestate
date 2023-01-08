@@ -16,7 +16,7 @@ export async function getAllWalkScoresMapped() {
 }
 
 export async function getAllCategories() {
-	return ['semi-detached', 'ruins'];
+	return ['semi-detached', 'ruins', 'detached', 'terrace house', 'flat', 'mansion'];
 }
 
 export async function getListings(startFrom: number, count: number, filters: FiltersType) {
