@@ -14,7 +14,7 @@ module.exports = {
 				'primary-disabled': '#b7c6d9',
 			},
 			backgroundImage: {
-				home: "url('https://picsum.photos/id/223/1920/1080')",
+				home: 'url("/homebg.jpg")',
 			},
 		},
 	},

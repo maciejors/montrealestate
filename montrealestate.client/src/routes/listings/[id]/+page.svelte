@@ -14,7 +14,7 @@
   let listing: ListingLong;
   $: pageTitle = listing === undefined ? 'Listing details' : `${listing.address}, ${listing.city}`;
   // an empty string if a city has no districts, otherwise ", {district-name}"
-  let districtSuffix: string;
+  let districtPrefix: string;
 
   onMount(async () => {
     let id: number = Number.parseInt($page.params.id);
@@ -22,7 +22,7 @@
       throw error(400, { message: 'Invalid listing ID' });
     }
     listing = await getListingDetails(id);
-    districtSuffix = listing.district === '' ? '' : `, ${listing.district}`
+    districtPrefix = listing.district === '' ? '' : `${listing.district}, `
   });
 </script>
 
@@ -39,7 +39,7 @@
         <div class="col-span-5 flex flex-col pt-6 px-6">
           <p class="text-3xl mb-2">${ listing.price }</p>
           <p class="text-xl">{ listing.address }</p>
-          <p class="text-xl">{ listing.city }{ districtSuffix }</p>
+          <p class="text-xl">{ districtPrefix }{ listing.city }</p>
           <div class="flex flex-row text-gray-500 flex-wrap gap-x-1 items-center my-2">
             <p>{ listing.floorArea } m2</p>
             <InlineTextSeparator />
