@@ -21,4 +21,6 @@ export interface ListingLong extends ListingShort {
 	walkScore: number;
 	walkScoreMapped: string;
 	description: string;
+	contactEmail: string;
+	contactPhoneNumber: string;
 }

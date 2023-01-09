@@ -28,7 +28,7 @@
 
 {#if listing !== undefined}
   <Container>
-    <div class="card my-10 flex flex-col pb-3">
+    <div class="card my-10 flex flex-col pb-4">
       <section class="flex flex-col relative
         lg:grid lg:grid-cols-12 lg:bg-gray-50"
       >
@@ -54,7 +54,7 @@
       </section>
       <div class="mx-6 my-5 border-t border-gray-200 lg:mt-0 lg:mb-3 lg:mx-0"></div>
       <section class="px-6">
-        <p class="text-xl">More details:</p>
+        <p class="section-title">More details:</p>
         <ul>
           <li>
             <p><b>{ listing.noRooms } room(s)</b>, including:</p>
@@ -74,8 +74,16 @@
       </section>
       <div class="mx-6 my-5 border-t border-gray-200 lg:my-3"></div>
       <section class="px-6">
-        <p class="text-xl">Description:</p>
+        <p class="section-title">Description:</p>
         <p>{ listing.description }</p>
+      </section>
+      <div class="mx-6 my-5 border-t border-gray-200 lg:my-3"></div>
+      <section class="px-6">
+        <p class="section-title">Contact details:</p>
+        <ul>
+          <li>email: <b>{ listing.contactEmail }</b></li>
+          <li>phone: <b>{ listing.contactPhoneNumber }</b></li>
+        </ul>
       </section>
     </div>
   </Container>
@@ -84,5 +92,8 @@
 <style lang="postcss">
   ul {
     @apply ml-8 list-disc;
+  }
+  .section-title {
+    @apply text-2xl mb-2;
   }
 </style>

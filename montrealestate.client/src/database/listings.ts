@@ -68,5 +68,7 @@ export async function getListingDetails(listingId: number): Promise<ListingLong>
 		walkScore: 99,
 		walkScoreMapped: 'walkscore 1',
 		description: 'Glorious ruins in the heart of Montreal! Buy today!!!!',
+		contactEmail: 'ilovebees@mail.com',
+		contactPhoneNumber: '+353 123 456 789',
 	};
 }
