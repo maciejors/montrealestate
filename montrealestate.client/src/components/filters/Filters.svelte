@@ -148,7 +148,7 @@
       bind:value={filters.walkScoreMapped}
     />
   </div>
-  <div class="flex flex-row justify-end gap-x-3 mt-4">
+  <div class="flex flex-row justify-center sm:justify-end gap-x-3 mt-4">
     <button on:click={ onResetFilters } class="btn btn-secondary w-28">
       Clear filters
     </button>

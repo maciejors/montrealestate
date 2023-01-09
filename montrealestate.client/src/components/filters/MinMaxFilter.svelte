@@ -24,6 +24,6 @@
 
 <style lang="postcss">
   .text-field {
-    @apply w-28 h-8 rounded focus:border focus:border-primary focus:ring-primary hover:bg-gray-100;
+    @apply w-20 h-8 rounded sm:w-28 focus:border focus:border-primary focus:ring-primary hover:bg-gray-100;
   }
 </style>
