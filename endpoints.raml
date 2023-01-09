@@ -1,0 +1,138 @@
+#%RAML 1.0
+title: Property website
+version: v1
+baseUri: https://montrealestate.ca
+types:
+    listingShort:
+        description: Partial data related to a single listing
+        type: object
+        properties:
+            id: integer
+            imgUrl: string
+            price: integer
+            floorArea: integer
+            constructionYear: integer
+            city: string
+            district: string
+            address: string
+            categories: string[]
+            noRooms: integer
+            isNew: boolean
+    listingFull:
+        description: Full data related to a single listing
+        type: object
+        properties:
+            id: integer
+            imgUrl: string
+            price: integer
+            floorArea: integer
+            constructionYear: integer
+            city: string
+            district: string
+            address: string
+            categories: string[]
+            noRooms: integer
+            noBedrooms: integer
+            noBathrooms: integer
+            noGarages: integer
+            noParkingLots: integer
+            isNew: boolean
+            googleMapsAddressLink: string
+            walkScore: integer
+            walkScoreMapped: string
+            description: string
+            contactEmail: string
+            contactPhoneNumber: string
+/api:
+    /cities:
+        get:
+            description: |
+                Fetches all unique city names from the database
+            responses:
+                200:
+                    body:
+                        application/json:
+                            description: |
+                                Success
+                            type: string[]
+    /districts:
+        get:
+            description: |
+                Fetches all district names for a given city from the database
+            queryParameters:
+                city: string
+            responses:
+                200:
+                    body:
+                        application/json:
+                            description: |
+                                Success
+                            type: string[]
+    /walkScoresMapped:
+        get:
+            description: |
+                Fetches all possible values for walkScoreMapped from the database
+            responses:
+                200:
+                    body:
+                        application/json:
+                            description: |
+                                Success
+                            type: string[]
+    /categories:
+        get:
+            description: |
+                Fetches all house categories from the database
+            responses:
+                200:
+                    body:
+                        application/json:
+                            description: |
+                                Success
+                            type: string[]
+    /listings:
+        get:
+            description: |
+                Fetches partial listings data
+            queryParameters:
+                startFrom: integer
+                count: integer
+                city?: string
+                district?: string
+                categories?: string[]
+                minPrice?: integer
+                maxPrice?: integer
+                minFloorArea?: integer
+                maxFloorArea?: integer
+                minConstructionYear?: integer
+                maxConstructionYear?: integer
+                minRooms?: integer
+                maxRooms?: integer
+                minBedrooms?: integer
+                maxBedrooms?: integer
+                minBathrooms?: integer
+                maxBathrooms?: integer
+                minGarages?: integer
+                maxGarages?: integer
+                minParkingLots?: integer
+                maxParkingLots?: integer
+                onlyNew: boolean
+                walkScoreMapped?: string
+            responses:
+                200:
+                    body:
+                        application/json:
+                            description: !
+                                Success
+                            type: listingShort[]
+        /{id}:
+            get:
+                description: |
+                    Fetches full data related to a single listing
+                responses:
+                    200:
+                        body:
+                            application/json:
+                                description: !
+                                    Success
+                                type: listingLong
