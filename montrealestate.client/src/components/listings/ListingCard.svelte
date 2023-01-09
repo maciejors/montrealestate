@@ -7,6 +7,7 @@
 
   const dispatch = createEventDispatcher();
 
+  // an empty string if a city has no districts, otherwise ", {district-name}"
   let districtSuffix = listing.district === '' ? '' : `, ${listing.district}`
 </script>
 
@@ -26,11 +27,15 @@
       <InlineTextSeparator />
       <p>built in { listing.constructionYear }</p>
       <InlineTextSeparator />
-      <p>{ listing.noRooms } rooms</p>
-      <InlineTextSeparator />
+      <p>{ listing.noRooms } room(s)</p>
       {#if listing.isNew}
+        <InlineTextSeparator />
         <p>new building</p>
       {/if}
+      {#each listing.categories as category}
+        <InlineTextSeparator />
+        <p>{ category }</p>
+      {/each}
     </div>
   </div>
 </div>

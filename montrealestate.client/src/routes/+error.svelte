@@ -8,7 +8,7 @@
 </script>
 
 <Container>
-  <div class="card flex flex-col items-center gap-y-2">
+  <div class="card flex flex-col items-center gap-y-2 p-4 m-4">
     <h1 class="text-3xl">Something went wrong :/</h1>
     <p class="text-center">
       <span class="font-bold">{$page.status}:</span>

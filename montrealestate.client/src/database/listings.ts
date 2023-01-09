@@ -39,6 +39,7 @@ export async function getListings(
 			city: 'Montreal',
 			district: 'West',
 			address: '12 Grafton St.',
+			categories: ['ruins'],
 			noRooms: 4,
 			isNew: true,
 		});
@@ -63,9 +64,9 @@ export async function getListingDetails(listingId: number): Promise<ListingLong>
 		noBathrooms: 1,
 		noGarages: 1,
 		noParkingLots: 4,
-		googleMapsAddressLink: '',
+		googleMapsAddressLink: 'https://maps.google.com',
 		walkScore: 99,
 		walkScoreMapped: 'walkscore 1',
-		description: 'Glorious ruins in the heart of Montreal!',
+		description: 'Glorious ruins in the heart of Montreal! Buy today!!!!',
 	};
 }

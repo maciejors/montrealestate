@@ -7,12 +7,12 @@ export interface ListingShort {
 	city: string;
 	district: string;
 	address: string;
+	categories: string[];
 	noRooms: number;
 	isNew: boolean;
 }
 
 export interface ListingLong extends ListingShort {
-	categories: string[];
 	noBedrooms: number;
 	noBathrooms: number;
 	noGarages: number;
