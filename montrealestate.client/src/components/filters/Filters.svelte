@@ -1,14 +1,18 @@
 <script lang="ts">
   import { onMount, createEventDispatcher } from "svelte";
-  import { filtersStore } from "../../stores/filtersStore";
   import MinMaxFilter from "./MinMaxFilter.svelte";
   import SelectBoxFilter from "./SelectBoxFilter.svelte";
   import CheckboxFilter from "./CheckboxFilter.svelte";
   import CategorySelectFilter from "./CategorySelectFilter.svelte";
 	import { getAllCategories, getAllCities, getAllDistricts, getAllWalkScoresMapped } from "../../database/listings";
+	import { FiltersClass, type FiltersType } from "../../types/Filters";
+  import copy from "../../utils/copy";
 
-  const dispatch = createEventDispatcher();
+  // defaultFilters contains CURRENTLY APPLIED filters
+  export let defaultFilters: FiltersType;
 
+  // filters variable contains VISIBLE FILTERS which MAY NOT HAVE BEEN APPLIED YET
+  let filters: FiltersType = new FiltersClass();
   let allCities: string[] = [];
   let allDistricts: string[] = [];
   let allWalkScoresMapped: string[] = [];
@@ -16,20 +20,25 @@
 
   $: hideDistrictSelectBox = allDistricts.length === 0;
 
+  const dispatch = createEventDispatcher();
+
   onMount(async () => {
+    filters = copy(defaultFilters);
     allCities = await getAllCities();
-    const currCity = $filtersStore.city;
+    const currCity = filters.city;
     if (currCity !== null) {
       allDistricts = await getAllDistricts(currCity);
     }
     allWalkScoresMapped = await getAllWalkScoresMapped();
     allCategories = await getAllCategories();
-    $filtersStore.categories = [...allCategories];
+    if (filters.categories.length === 0) {
+      filters.categories = [...allCategories];
+    }
   });
 
   async function onCityChange() {
-    $filtersStore.district = '';
-    const currCity = $filtersStore.city;
+    filters.district = '';
+    const currCity = filters.city;
     if (currCity !== null) {
       allDistricts = await getAllDistricts(currCity);
     } else {
@@ -38,32 +47,32 @@
   }
 
   function onResetFilters() {
-    $filtersStore.city = '';
-		$filtersStore.district = '';
-		$filtersStore.categories = [...allCategories];
-		$filtersStore.minPrice = null;
-		$filtersStore.maxPrice = null;
-		$filtersStore.minFloorArea = null;
-		$filtersStore.maxFloorArea = null;
-		$filtersStore.minConstructionYear = null;
-		$filtersStore.maxConstructionYear = null;
-		$filtersStore.minRooms = null;
-		$filtersStore.maxRooms = null;
-		$filtersStore.minBedrooms = null;
-		$filtersStore.maxBedrooms = null;
-		$filtersStore.minBathrooms = null;
-		$filtersStore.maxBathrooms = null;
-		$filtersStore.minGarages = null;
-		$filtersStore.maxGarages = null;
-		$filtersStore.minParkingLots = null;
-		$filtersStore.maxParkingLots = null;
-		$filtersStore.onlyNew = false;
-		$filtersStore.walkScoreMapped = null;
+    filters.city = '';
+		filters.district = '';
+		filters.categories = [...allCategories];
+		filters.minPrice = null;
+		filters.maxPrice = null;
+		filters.minFloorArea = null;
+		filters.maxFloorArea = null;
+		filters.minConstructionYear = null;
+		filters.maxConstructionYear = null;
+		filters.minRooms = null;
+		filters.maxRooms = null;
+		filters.minBedrooms = null;
+		filters.maxBedrooms = null;
+		filters.minBathrooms = null;
+		filters.maxBathrooms = null;
+		filters.minGarages = null;
+		filters.maxGarages = null;
+		filters.minParkingLots = null;
+		filters.maxParkingLots = null;
+		filters.onlyNew = false;
+		filters.walkScoreMapped = null;
     allDistricts = [];
   }
 
   function onApplyFilters() {
-    dispatch('applyFilters');
+    dispatch('applyFilters', { filters: filters });
   }
 </script>
 
@@ -75,68 +84,68 @@
       <SelectBoxFilter 
         label="City:"
         items={allCities}
-        bind:value={$filtersStore.city}
+        bind:value={filters.city}
         on:valueChanged={onCityChange}
       />
       <SelectBoxFilter 
         label="District:"
         items={allDistricts}
-        bind:value={$filtersStore.district}
+        bind:value={filters.district}
         bind:hidden={hideDistrictSelectBox}
       />
     </div>
     <CategorySelectFilter
       bind:categories={allCategories}
-      bind:appliedCategories={$filtersStore.categories}
+      bind:appliedCategories={filters.categories}
     />
     <MinMaxFilter 
       label="Price (CAD):" 
-      bind:min={$filtersStore.minPrice} 
-      bind:max={$filtersStore.maxPrice} 
+      bind:min={filters.minPrice} 
+      bind:max={filters.maxPrice} 
     />
     <MinMaxFilter 
       label="Floor area (m2):" 
-      bind:min={$filtersStore.minFloorArea} 
-      bind:max={$filtersStore.maxFloorArea} 
+      bind:min={filters.minFloorArea} 
+      bind:max={filters.maxFloorArea} 
     />
     <MinMaxFilter 
       label="Constr. Year:" 
-      bind:min={$filtersStore.minConstructionYear} 
-      bind:max={$filtersStore.maxConstructionYear} 
+      bind:min={filters.minConstructionYear} 
+      bind:max={filters.maxConstructionYear} 
     />
     <MinMaxFilter 
       label="Rooms:" 
-      bind:min={$filtersStore.minRooms} 
-      bind:max={$filtersStore.maxRooms} 
+      bind:min={filters.minRooms} 
+      bind:max={filters.maxRooms} 
     />
     <MinMaxFilter 
       label="Bedrooms:" 
-      bind:min={$filtersStore.minBedrooms} 
-      bind:max={$filtersStore.maxBedrooms} 
+      bind:min={filters.minBedrooms} 
+      bind:max={filters.maxBedrooms} 
     />
     <MinMaxFilter 
       label="Bathrooms:" 
-      bind:min={$filtersStore.minBathrooms} 
-      bind:max={$filtersStore.maxBathrooms} 
+      bind:min={filters.minBathrooms} 
+      bind:max={filters.maxBathrooms} 
     />
     <MinMaxFilter 
       label="Garages:" 
-      bind:min={$filtersStore.minGarages} 
-      bind:max={$filtersStore.maxGarages} 
+      bind:min={filters.minGarages} 
+      bind:max={filters.maxGarages} 
     />
     <MinMaxFilter 
       label="Parking lots:" 
-      bind:min={$filtersStore.minParkingLots} 
-      bind:max={$filtersStore.maxParkingLots} 
+      bind:min={filters.minParkingLots} 
+      bind:max={filters.maxParkingLots} 
     />
     <CheckboxFilter
       label="Only new buildings"
-      bind:value={$filtersStore.onlyNew}
+      bind:value={filters.onlyNew}
     />
     <SelectBoxFilter 
       label="WalkScore:"
       items={allWalkScoresMapped}
-      bind:value={$filtersStore.walkScoreMapped}
+      bind:value={filters.walkScoreMapped}
     />
   </div>
   <div class="flex flex-row justify-end gap-x-3 mt-4">

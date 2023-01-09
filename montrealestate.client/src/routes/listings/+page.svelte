@@ -8,9 +8,11 @@
   import Container from "../../components/Container.svelte";
 	import Filters from "../../components/filters/Filters.svelte";
 	import type { ListingShort } from "../../types/Listings";
-	import { getListings } from "../../database/listings";
+	import { getAllCategories, getListings } from "../../database/listings";
 	import ListingCard from "../../components/listings/ListingCard.svelte";
 	import { goto } from "$app/navigation";
+	import type { FiltersType } from "../../types/Filters";
+	import copy from "../../utils/copy";
 
   let listings: ListingShort[] = [];
   let filtersVisible = false;
@@ -23,15 +25,17 @@
     filtersVisible = false;
   }
 
-  async function search() {
-    listings = await getListings(0, 10, $filtersStore);
+  async function search(filters: FiltersType) {
+    hideFilters();
+    listings = await getListings(0, 10, filters);
+    $filtersStore = copy(filters);
   }
 
   async function viewListingDetails(listingId: number) {
     goto(`listings/${listingId}`);
   }
 
-  onMount(search);
+  onMount(() => search($filtersStore));
 </script>
 
 <section class="bg-gray-200 py-4 flex flex-col items-center border-b border-gray-300">
@@ -48,7 +52,10 @@
   </div>
   <div class="mt-6" class:hidden={!filtersVisible}>
     <Container>
-      <Filters on:applyFilters={search} />
+      <Filters 
+        defaultFilters={$filtersStore}
+        on:applyFilters={(e) => search(e.detail.filters)} 
+      />
     </Container>
   </div>
 </section>
