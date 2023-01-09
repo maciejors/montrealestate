@@ -64,7 +64,7 @@
   <button class="btn border border-gray-500 bg-white hover:bg-gray-100 rounded px-2 h-8" on:click={showModal}>{ buttonLabel }</button>
 </div>
 <Modal visible={modalVisible}>
-  <div class="card flex flex-col justify-center items-center">
+  <div class="card flex flex-col justify-center items-center p-4">
     <div class="w-full flex flex-row justify-between items-center">
       <p class="font-bold">Select categories:</p>
       <button 
