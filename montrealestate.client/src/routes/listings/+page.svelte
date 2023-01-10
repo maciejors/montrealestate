@@ -15,9 +15,12 @@
 	import copy from "../../utils/copy";
 	import PageNavigation from "../../components/PageNavigation.svelte";
 	import SpinnerLoader from "../../components/SpinnerLoader.svelte";
+	import SelectBoxFilter from "../../components/filters/SelectBoxFilter.svelte";
 
   let listings: ListingShort[] = [];
   let filtersVisible = false;
+  let sortBy = 'price';
+  let sortAscending = true;
   // pagination variables:
   let startFrom = 0;
   let count = 10
@@ -46,6 +49,11 @@
     $filtersStore = copy(newFilters);
   }
 
+  async function onSortingApplied() {
+    startFrom = 0;
+    await search($filtersStore);
+  }
+
   async function onPageChanged() {
     await search($filtersStore);
   }
@@ -62,6 +70,12 @@
     class="flex flex-row justify-end items-center w-full max-w-5xl gap-x-3 px-10"
     class:add-separator={filtersVisible}
   >
+    <SelectBoxFilter
+      label="Sort by: "
+      items={['hello', 'price']}
+      bind:value={sortBy}
+      on:valueChanged={onSortingApplied}
+    />
     {#if filtersVisible}
       <button on:click={hideFilters} class="btn btn-secondary w-28">Hide filters</button>
     {:else}
@@ -93,7 +107,7 @@
   <div class="pb-8 pt-12" class:hidden={listings.length > 0}>
     <SpinnerLoader />
   </div>
-  <div class="flex flex-col gap-y-2 py-4">
+  <div class="flex flex-col gap-y-6 py-4">
     {#each listings as listing}
       <ListingCard { listing } on:click={() => viewListingDetails(listing.id)} />
     {/each}
