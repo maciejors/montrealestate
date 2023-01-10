@@ -54,7 +54,7 @@
       </section>
       <div class="mx-6 my-5 border-t border-gray-200 lg:mt-0 lg:mb-3 lg:mx-0"></div>
       <section class="px-6">
-        <p class="section-title">More details:</p>
+        <h3 class="section-title">More details:</h3>
         <ul>
           <li>
             <p><b>{ listing.noRooms } room(s)</b>, including:</p>
@@ -74,12 +74,12 @@
       </section>
       <div class="mx-6 my-5 border-t border-gray-200 lg:my-3"></div>
       <section class="px-6">
-        <p class="section-title">Description:</p>
+        <h3 class="section-title">Description:</h3>
         <p>{ listing.description }</p>
       </section>
       <div class="mx-6 my-5 border-t border-gray-200 lg:my-3"></div>
       <section class="px-6">
-        <p class="section-title">Contact details:</p>
+        <h3 class="section-title">Contact details:</h3>
         <ul>
           <li>email: <b>{ listing.contactEmail }</b></li>
           <li>phone: <b>{ listing.contactPhoneNumber }</b></li>

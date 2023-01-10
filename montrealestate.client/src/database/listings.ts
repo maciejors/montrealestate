@@ -20,7 +20,18 @@ export async function getAllWalkScoresMapped() {
 }
 
 export async function getAllCategories() {
-	return ['semi-detached', 'ruins', 'detached', 'terrace house', 'flat', 'mansion'];
+	return [
+		'semi-detached',
+		'ruins',
+		'detached',
+		'terrace house',
+		'flat',
+		'mansion',
+		'stadium',
+		'hotel',
+		'palace',
+		'shack',
+	];
 }
 
 export async function getListings(
