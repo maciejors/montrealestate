@@ -1,12 +1,12 @@
 <script lang="ts">
-  import type NavbarTileItem from "../../interfaces/NavbarTileItem";
+  import type NavbarTileItem from "../../types/NavbarTileItem";
   import NavbarTile from "./NavbarTile.svelte";
 
   export let items: NavbarTileItem[];
 </script>
 
 <nav 
-  class="sticky top-0 w-full 
+  class="sticky top-0 w-full z-40
     py-2 px-2
     sm:py-5 sm:px-10
     bg-white
@@ -30,7 +30,7 @@
   </div>
 </nav>
 
-<style>
+<style lang="postcss">
   .title {
     @apply text-2xl font-bold text-primary;
     font-family: Georgia, 'Times New Roman', Times, serif
