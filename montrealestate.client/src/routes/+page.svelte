@@ -6,10 +6,12 @@
   import { goto } from "$app/navigation";
   import { onMount } from "svelte";
   import { filtersStore } from "../stores/filtersStore";
+  import { searchOptionsStore } from "../stores/searchOptionsStore";
   import Container from "../components/Container.svelte";
   import SelectBoxFilter from "../components/filters/SelectBoxFilter.svelte";
   import { getAllCities } from "../database/listings";
 	import { FiltersClass } from "../types/Filters";
+	import { SearchOptionsClass } from "../types/SearchOptions";
 
   let allCities: string[] = [];
   let selectedCity: string = '';
@@ -24,6 +26,10 @@
       filters.city = selectedCity;
       return filters;
     }); 
+    searchOptionsStore.update(options => {
+      options = new SearchOptionsClass();
+      return options;
+    });
   }
 
   function search() {

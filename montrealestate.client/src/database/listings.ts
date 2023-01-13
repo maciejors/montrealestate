@@ -1,5 +1,6 @@
 import type { FiltersType } from 'src/types/Filters';
 import type { ListingLong, ListingShort } from 'src/types/Listings';
+import type { SearchOptionsType } from 'src/types/SearchOptions';
 
 export async function getAllCities() {
 	return ['montreal', 'warsaw'];
@@ -20,9 +21,8 @@ export async function getAllWalkScoresMapped() {
 }
 
 export async function getListings(
-	startFrom: number,
-	count: number,
 	filters: FiltersType,
+	options: SearchOptionsType,
 ): Promise<ListingShort[]> {
 	const result: ListingShort[] = [];
 	for (let i = 0; i < 10; i++) {

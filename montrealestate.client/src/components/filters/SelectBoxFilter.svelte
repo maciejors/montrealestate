@@ -2,8 +2,8 @@
   import { createEventDispatcher } from "svelte";
 
   export let label: string = '';
-  export let items: string[];
-  export let value: string | null = null;
+  export let items: any[];
+  export let value: any | null = null;
   export let hidden: boolean = false;
 
   const dispatch = createEventDispatcher();

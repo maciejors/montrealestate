@@ -13,20 +13,16 @@
 	import { goto } from "$app/navigation";
 	import type { FiltersType } from "../../types/Filters";
 	import copy from "../../utils/copy";
-	import PageNavigation from "../../components/PageNavigation.svelte";
+	import PageNavigation from "../../components/searchoptions/PageNavigation.svelte";
 	import SpinnerLoader from "../../components/SpinnerLoader.svelte";
-	import SelectBoxFilter from "../../components/filters/SelectBoxFilter.svelte";
-	import CheckboxFilter from "../../components/filters/CheckboxFilter.svelte";
+  import { searchOptionsStore } from "../../stores/searchOptionsStore";
+	import type { SearchOptionsType } from "../../types/SearchOptions";
+  import SearchOptionsModal from "../../components/searchoptions/SearchOptionsModal.svelte";
 
   let listings: ListingShort[] = [];
   let filtersVisible = false;
 
-  let sortingOptions = ['price', 'floor area'];
-  let sortBy = 'price';
-  let sortAscending = true;
   // pagination variables:
-  let startFrom = 0;
-  let count = 10
   let totalCount = 22;
   $: displayedCount = listings.length;
 
@@ -38,53 +34,48 @@
     filtersVisible = false;
   }
 
-  async function search(filters: FiltersType) {
+  async function search(filters: FiltersType, searchOptions: SearchOptionsType) {
     listings = [];
     setTimeout(async () => {
-      listings = await getListings(startFrom, count, filters);
+      const response = await getListings(filters, searchOptions);
+      listings = response;
     }, 1000);
   }
 
   async function onFiltersChanged(newFilters: FiltersType) {
     hideFilters();
-    startFrom = 0;
-    search(newFilters);
     $filtersStore = copy(newFilters);
+    $searchOptionsStore.startFrom = 0;
+    await search($filtersStore, $searchOptionsStore);
   }
 
-  async function onSortingApplied() {
-    startFrom = 0;
-    await search($filtersStore);
+  async function onSearchOptionsApplied(newOptions: SearchOptionsType) {
+    $searchOptionsStore = copy(newOptions);
+    $searchOptionsStore.startFrom = 0;
+    await search($filtersStore, $searchOptionsStore);
   }
 
   async function onPageChanged() {
-    await search($filtersStore);
+    await search($filtersStore, $searchOptionsStore);
   }
 
   async function viewListingDetails(listingId: number) {
     goto(`listings/${listingId}`);
   }
 
-  onMount(() => search($filtersStore));
+  onMount(() => search($filtersStore, $searchOptionsStore));
 </script>
 
 <section class="bg-gray-200 py-4 flex flex-col items-center border-b border-gray-300">
   <div 
-    class="flex flex-col sm:flex-row justify-between items-center w-full max-w-5xl gap-3 px-10"
+    class="flex flex-col sm:flex-row justify-end items-center w-full max-w-5xl gap-3 px-10"
     class:add-separator={filtersVisible}
-  >
-    <div class="flex flex-col sm:flex-row gap-3 items-center">
-      <SelectBoxFilter
-        label="Sort by: "
-        items={['hello', 'price']}
-        bind:value={sortBy}
-        on:valueChanged={onSortingApplied}
-      />
-      <CheckboxFilter
-        label="Ascending"
-        bind:value={sortAscending}
-      />
-    </div>
+  > 
+    <SearchOptionsModal 
+      defaultOptions={$searchOptionsStore} 
+      buttonLabel="Search options" 
+      on:searchOptionsApplied={(e) => onSearchOptionsApplied(e.detail.searchOptions)}
+    />
     {#if filtersVisible}
       <button on:click={hideFilters} class="btn btn-secondary w-28">Hide filters</button>
     {:else}
@@ -104,8 +95,8 @@
   <div class="flex flex-col items-center w-full mt-2 gap-y-1
       md:flex-row md:justify-start">
     <PageNavigation 
-      bind:startFrom={startFrom} 
-      count={count} 
+      bind:startFrom={$searchOptionsStore.startFrom} 
+      count={$searchOptionsStore.count} 
       totalCount={totalCount}
       on:pageChanged={onPageChanged}
     />
@@ -123,8 +114,8 @@
   </div>
   <div class="mb-4">
     <PageNavigation 
-      bind:startFrom={startFrom} 
-      count={count} 
+      bind:startFrom={$searchOptionsStore.startFrom} 
+      count={$searchOptionsStore.count} 
       totalCount={totalCount}
       on:pageChanged={onPageChanged}
     />
