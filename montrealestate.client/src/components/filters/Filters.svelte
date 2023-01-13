@@ -3,8 +3,7 @@
   import MinMaxFilter from "./MinMaxFilter.svelte";
   import SelectBoxFilter from "./SelectBoxFilter.svelte";
   import CheckboxFilter from "./CheckboxFilter.svelte";
-  import CategorySelectFilter from "./CategorySelectFilter.svelte";
-	import { getAllCategories, getAllCities, getAllDistricts, getAllWalkScoresMapped } from "../../database/listings";
+	import { getAllCities, getAllDistricts, getAllWalkScoresMapped } from "../../database/listings";
 	import { FiltersClass, type FiltersType } from "../../types/Filters";
   import copy from "../../utils/copy";
 
@@ -16,7 +15,6 @@
   let allCities: string[] = [];
   let allDistricts: string[] = [];
   let allWalkScoresMapped: string[] = [];
-  let allCategories: string[] = [];
 
   $: hideDistrictSelectBox = allDistricts.length === 0;
 
@@ -30,10 +28,6 @@
       allDistricts = await getAllDistricts(currCity);
     }
     allWalkScoresMapped = await getAllWalkScoresMapped();
-    allCategories = await getAllCategories();
-    if (filters.categories.length === 0) {
-      filters.categories = [...allCategories];
-    }
   });
 
   async function onCityChange() {
@@ -49,7 +43,6 @@
   function onResetFilters() {
     filters.city = '';
 		filters.district = '';
-		filters.categories = [...allCategories];
 		filters.minPrice = null;
 		filters.maxPrice = null;
 		filters.minFloorArea = null;
@@ -94,10 +87,6 @@
         bind:hidden={hideDistrictSelectBox}
       />
     </div>
-    <CategorySelectFilter
-      bind:categories={allCategories}
-      bind:appliedCategories={filters.categories}
-    />
     <MinMaxFilter 
       label="Price (CAD):" 
       bind:min={filters.minPrice} 

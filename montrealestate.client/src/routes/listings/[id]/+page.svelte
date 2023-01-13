@@ -44,10 +44,6 @@
             <p>{ listing.floorArea } m2</p>
             <InlineTextSeparator />
             <p>{ listing.noRooms } room(s)</p>
-            {#each listing.categories as category}
-              <InlineTextSeparator />
-              <p>{ category }</p>
-            {/each}
           </div>
           <a href={ listing.googleMapsAddressLink } class="btn btn-primary w-fit mt-2">View on Google Maps</a>
         </div>

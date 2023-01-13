@@ -32,10 +32,6 @@
         <InlineTextSeparator />
         <p>new building</p>
       {/if}
-      {#each listing.categories as category}
-        <InlineTextSeparator />
-        <p>{ category }</p>
-      {/each}
     </div>
   </div>
 </div>

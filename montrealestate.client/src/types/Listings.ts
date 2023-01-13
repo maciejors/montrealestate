@@ -7,7 +7,6 @@ export interface ListingShort {
 	city: string;
 	district: string;
 	address: string;
-	categories: string[];
 	noRooms: number;
 	isNew: boolean;
 }

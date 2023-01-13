@@ -1,7 +1,6 @@
 export interface FiltersType {
 	city: string;
 	district: string;
-	categories: string[];
 	minPrice: number | null;
 	maxPrice: number | null;
 	minFloorArea: number | null;
@@ -25,7 +24,6 @@ export interface FiltersType {
 export class FiltersClass implements FiltersType {
 	city: string = '';
 	district: string = '';
-	categories: string[] = [];
 	minPrice: number | null = null;
 	maxPrice: number | null = null;
 	minFloorArea: number | null = null;

@@ -8,16 +8,14 @@
   import { filtersStore } from "../stores/filtersStore";
   import Container from "../components/Container.svelte";
   import SelectBoxFilter from "../components/filters/SelectBoxFilter.svelte";
-  import { getAllCategories, getAllCities } from "../database/listings";
+  import { getAllCities } from "../database/listings";
 	import { FiltersClass } from "../types/Filters";
 
   let allCities: string[] = [];
-  let allCategories: string[] = [];
   let selectedCity: string = '';
 
   onMount(async () => {
     allCities = await getAllCities();
-    allCategories = await getAllCategories();
   });
   
   function onCitySelect() {
@@ -26,15 +24,6 @@
       filters.city = selectedCity;
       return filters;
     }); 
-  }
-
-  function onCategorySelect(category: string) {
-    filtersStore.update(filters => {
-      filters = new FiltersClass();
-      filters.categories = [ category ];
-      return filters;
-    });
-    search();
   }
 
   function search() {
@@ -55,18 +44,6 @@
       >
         Search
     </button>
-    </div>
-  </Container>
-</section>
-<section class="pb-10 pt-4">
-  <Container>
-    <h3 class="text-lg w-full mb-4">Browse by category:</h3>
-    <div class="flex flex-row flex-wrap w-full gap-x-4 gap-y-2">
-      {#each allCategories as category}
-        <button class="btn btn-secondary" on:click={() => onCategorySelect(category)}>
-          { category }
-        </button>
-      {/each}
     </div>
   </Container>
 </section>

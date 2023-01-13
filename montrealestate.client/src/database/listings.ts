@@ -19,21 +19,6 @@ export async function getAllWalkScoresMapped() {
 	return ['walkscore1', 'walkscore2'];
 }
 
-export async function getAllCategories() {
-	return [
-		'semi-detached',
-		'ruins',
-		'detached',
-		'terrace house',
-		'flat',
-		'mansion',
-		'stadium',
-		'hotel',
-		'palace',
-		'shack',
-	];
-}
-
 export async function getListings(
 	startFrom: number,
 	count: number,
@@ -50,7 +35,6 @@ export async function getListings(
 			city: 'Montreal',
 			district: 'West',
 			address: '12 Grafton St.',
-			categories: ['ruins'],
 			noRooms: 4,
 			isNew: true,
 		});
@@ -70,7 +54,6 @@ export async function getListingDetails(listingId: number): Promise<ListingLong>
 		address: '12 Grafton St.',
 		noRooms: 4,
 		isNew: true,
-		categories: ['ruins'],
 		noBedrooms: 1,
 		noBathrooms: 1,
 		noGarages: 1,
