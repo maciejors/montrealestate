@@ -55,6 +55,29 @@ class ApiDistrictsView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class ApiCategoriesView(APIView):
+
+    def get(self, *args, **kwargs):
+        """
+        List all categories
+        """
+        result = ['Apartment',
+                  'Commercial',
+                  'Detached',
+                  'Duplex',
+                  'House',
+                  'LoftStudio',
+                  'Multiplex',
+                  'Other',
+                  'Quadruplex',
+                  'Triplex']
+        serializer = ItemsSerializer(data={'items': result})
+        if serializer.is_valid():
+            print(serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 class ApiListings(APIView):
 
     def get(self,
