@@ -16,9 +16,12 @@
 	import PageNavigation from "../../components/PageNavigation.svelte";
 	import SpinnerLoader from "../../components/SpinnerLoader.svelte";
 	import SelectBoxFilter from "../../components/filters/SelectBoxFilter.svelte";
+	import CheckboxFilter from "../../components/filters/CheckboxFilter.svelte";
 
   let listings: ListingShort[] = [];
   let filtersVisible = false;
+
+  let sortingOptions = ['price', 'floor area'];
   let sortBy = 'price';
   let sortAscending = true;
   // pagination variables:
@@ -67,15 +70,21 @@
 
 <section class="bg-gray-200 py-4 flex flex-col items-center border-b border-gray-300">
   <div 
-    class="flex flex-row justify-end items-center w-full max-w-5xl gap-x-3 px-10"
+    class="flex flex-col sm:flex-row justify-between items-center w-full max-w-5xl gap-3 px-10"
     class:add-separator={filtersVisible}
   >
-    <SelectBoxFilter
-      label="Sort by: "
-      items={['hello', 'price']}
-      bind:value={sortBy}
-      on:valueChanged={onSortingApplied}
-    />
+    <div class="flex flex-col sm:flex-row gap-3 items-center">
+      <SelectBoxFilter
+        label="Sort by: "
+        items={['hello', 'price']}
+        bind:value={sortBy}
+        on:valueChanged={onSortingApplied}
+      />
+      <CheckboxFilter
+        label="Ascending"
+        bind:value={sortAscending}
+      />
+    </div>
     {#if filtersVisible}
       <button on:click={hideFilters} class="btn btn-secondary w-28">Hide filters</button>
     {:else}
