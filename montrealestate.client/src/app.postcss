@@ -4,7 +4,6 @@
 
 .card {
 	background: #fff;
-	padding: 20px;
 	border-radius: 6px;
 	box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 	border: 1px solid #f6f6f6;
@@ -12,12 +11,12 @@
 
 .btn {
 	display: inline-block;
-	padding: 4px 10px;
 	cursor: pointer;
 }
 
 .btn-primary {
 	@apply bg-primary border-primary;
+	padding: 4px 10px;
 	border-width: 2px;
 	border-style: solid;
 	border-radius: 0.25rem;
@@ -37,8 +36,17 @@
 	transition: 200ms;
 }
 
+.btn-primary:disabled {
+	@apply bg-primary-disabled border-primary-disabled;
+	border-width: 2px;
+	border-style: solid;
+	border-radius: 0.25rem;
+	color: #eee;
+}
+
 .btn-secondary {
 	@apply text-primary border-primary;
+	padding: 4px 10px;
 	background: #fff;
 	border-width: 2px;
 	border-style: solid;
