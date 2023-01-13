@@ -3,15 +3,13 @@ import csv
 
 
 def run():
-    with open('montrealestate.api/listings_final.csv', encoding='utf16') as file:
+    with open('./listings_final.csv', encoding='utf16') as file:
         reader = csv.reader(file)
         next(reader)
 
         m.Apartment.objects.all().delete()
 
         for row in reader:
-            print(row)
-
             apartment = m.Apartment(
                 address=row[0],
                 city=row[1],
