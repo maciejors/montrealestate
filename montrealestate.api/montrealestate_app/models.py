@@ -24,16 +24,6 @@ class Apartment(models.Model):
     livingArea = models.FloatField(default=0)
     contactEmail = models.CharField(max_length=255)
     contactPhoneNumber = models.CharField(max_length=255)
-    apartment = models.BooleanField(default=True)
-    commercial = models.BooleanField(default=True)
-    detached = models.BooleanField(default=True)
-    duplex = models.BooleanField(default=True)
-    house = models.BooleanField(default=True)
-    loftStudio = models.BooleanField(default=True)
-    multiplex = models.BooleanField(default=True)
-    other = models.BooleanField(default=True)
-    quadruplex = models.BooleanField(default=True)
-    triplex = models.BooleanField(default=True)
 
     def __str__(self):
         return self.address

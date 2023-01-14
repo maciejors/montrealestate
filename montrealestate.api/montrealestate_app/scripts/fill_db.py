@@ -33,15 +33,5 @@ def run():
                 livingArea=row[19],
                 contactEmail=row[20],
                 contactPhoneNumber=row[21],
-                apartment=row[22],
-                commercial=row[23],
-                detached=row[24],
-                duplex=row[25],
-                house=row[26],
-                loftStudio=row[27],
-                multiplex=row[28],
-                other=row[29],
-                quadruplex=row[30],
-                triplex=row[31],
             )
             apartment.save()

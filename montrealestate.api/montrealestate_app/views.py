@@ -1,14 +1,27 @@
+import sqlite3
 import sys
 
-import rest_framework.request
-from django.shortcuts import render
-from rest_framework.views import APIView
-from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from .models import Apartment
-from .serializers import ListingFull, ItemsSerializer
-import sqlite3
-from sqlite3 import Error
+from .serializers import ItemsSerializer, ListingFull, ApartmentsCountSerializer
+
+
+def isNoneNumeric(x, default, request):
+    tmp = request.GET.get(x)
+    return int(tmp) if tmp is not None else default
+
+
+def isNoneBoolean(x, default, request):
+    tmp = request.GET.get(x)
+    return tmp == 'True' if tmp is not None else default
+
+
+def isNoneString(x, default, request):
+    tmp = request.GET.get(x)
+    return tmp if tmp is not None else default
 
 
 class ApiCitiesView(APIView):
@@ -22,6 +35,7 @@ class ApiCitiesView(APIView):
         cursor = connection.cursor()
         cursor.execute(query)
         query_result = cursor.fetchall()
+        print(query_result)
         result = []
         for elem in query_result:
             result.append(elem[0])
@@ -55,158 +69,146 @@ class ApiDistrictsView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ApiCategoriesView(APIView):
-
-    def get(self, *args, **kwargs):
-        """
-        List all categories
-        """
-        result = ['Apartment',
-                  'Commercial',
-                  'Detached',
-                  'Duplex',
-                  'House',
-                  'LoftStudio',
-                  'Multiplex',
-                  'Other',
-                  'Quadruplex',
-                  'Triplex']
-        serializer = ItemsSerializer(data={'items': result})
-        if serializer.is_valid():
-            print(serializer.data)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
 class ApiListings(APIView):
 
-    def get(self,
-            startFrom=1,
-            no_records=1,
-            city='.*',
-            district='.*',
-            minPrice=0,
-            maxPrice=sys.maxsize,
-            minFloorArea=0,
-            maxFloorArea=sys.maxsize,
-            minConstructionYear=0,
-            maxConstructionYear=sys.maxsize,
-            minRooms=0,
-            maxRooms=sys.maxsize,
-            minBedrooms=0,
-            maxBedrooms=sys.maxsize,
-            minBathrooms=0,
-            maxBathrooms=sys.maxsize,
-            minGarages=0,
-            maxGarages=sys.maxsize,
-            minParkingLots=0,
-            maxParkingLots=sys.maxsize,
-            onlyNew=False,
-            walkScoreThreshold=0,
-            apartment=0,
-            commercial=0,
-            detached=0,
-            house=0,
-            loftStudio=0,
-            multiplex=0,
-            other=0,
-            quadruplex=0,
-            triplex=0,
-            *args, **kwargs):
+    def get_object(self,
+                   startFrom,
+                   count,
+                   city,
+                   district,
+                   minPrice,
+                   maxPrice,
+                   minFloorArea,
+                   maxFloorArea,
+                   minConstructionYear,
+                   maxConstructionYear,
+                   minRooms,
+                   maxRooms,
+                   minBedrooms,
+                   maxBedrooms,
+                   minBathrooms,
+                   maxBathrooms,
+                   minGarages,
+                   maxGarages,
+                   minParkingLots,
+                   maxParkingLots,
+                   onlyNew,
+                   walkScoreThreshold,
+                   sortBy,
+                   sortAscending):
+        sortBy = sortBy if sortAscending is True else ('-' + sortBy)
+        listings = Apartment.objects \
+                       .filter(city__iregex='^' + city + '$') \
+                       .filter(district__iregex='^' + district + '$') \
+                       .filter(price__gte=minPrice) \
+                       .filter(price__lte=maxPrice) \
+                       .filter(livingArea__gte=minFloorArea) \
+                       .filter(livingArea__lte=maxFloorArea) \
+                       .filter(constructionYear__gte=minConstructionYear) \
+                       .filter(constructionYear__lte=maxConstructionYear) \
+                       .filter(noRooms__gte=minRooms) \
+                       .filter(noRooms__lte=maxRooms) \
+                       .filter(noBedrooms__gte=minBedrooms) \
+                       .filter(noBedrooms__lte=maxBedrooms) \
+                       .filter(noBathrooms__gte=minBathrooms) \
+                       .filter(noBathrooms__lte=maxBathrooms) \
+                       .filter(noGarages__gte=minGarages) \
+                       .filter(noGarages__lte=maxGarages) \
+                       .filter(noParkingLots__gte=minParkingLots) \
+                       .filter(noParkingLots__lte=maxParkingLots) \
+                       .filter(isNew=onlyNew) \
+                       .filter(walkScore__gte=walkScoreThreshold) \
+                       .order_by(sortBy).values()[startFrom:(startFrom + count)]
+        no_listings = Apartment.objects \
+            .filter(city__iregex='^' + city + '$') \
+            .filter(district__iregex='^' + district + '$') \
+            .filter(price__gte=minPrice) \
+            .filter(price__lte=maxPrice) \
+            .filter(livingArea__gte=minFloorArea) \
+            .filter(livingArea__lte=maxFloorArea) \
+            .filter(constructionYear__gte=minConstructionYear) \
+            .filter(constructionYear__lte=maxConstructionYear) \
+            .filter(noRooms__gte=minRooms) \
+            .filter(noRooms__lte=maxRooms) \
+            .filter(noBedrooms__gte=minBedrooms) \
+            .filter(noBedrooms__lte=maxBedrooms) \
+            .filter(noBathrooms__gte=minBathrooms) \
+            .filter(noBathrooms__lte=maxBathrooms) \
+            .filter(noGarages__gte=minGarages) \
+            .filter(noGarages__lte=maxGarages) \
+            .filter(noParkingLots__gte=minParkingLots) \
+            .filter(noParkingLots__lte=maxParkingLots) \
+            .filter(isNew=onlyNew) \
+            .filter(walkScore__gte=walkScoreThreshold) \
+            .count()
+        try:
+            return listings, no_listings
+        except Apartment.DoesNotExist:
+            return None
+
+    def get(self, request, *args, **kwargs):
         """
-        List all distinct walkScoreMapped values
+        List all listings matching filters
         """
-        connection = sqlite3.connect("db.sqlite3")
-        query = "select id, " \
-                "photoUrl, " \
-                "price, " \
-                "livingArea, " \
-                "constructionYear, " \
-                "city, " \
-                "district, " \
-                "address," \
-                "category," \
-                "noRooms," \
-                "isNew" \
-                "from montrealestate_app_apartment" \
-                "where city regexp '^' || ? || '$'" \
-                "and district regexp '^' || ? || '$'" \
-                "and price >= ?" \
-                "and price <= ?" \
-                "and livingArea >= ?" \
-                "and livingArea <= ?" \
-                "and constructionYear >= ?" \
-                "and constructionYear <= ?" \
-                "and noRooms >= ?" \
-                "and noRooms <= ?" \
-                "and noBedrooms >= ?" \
-                "and noBedrooms <= ?" \
-                "and noBathrooms >= ?" \
-                "and noBathrooms <= ?" \
-                "and noGarages >= ?" \
-                "and noGarages <= ?" \
-                "and noParkingLots >= ?" \
-                "and noParkingLots <= ?" \
-                "and isNew = ?" \
-                "and walkScore >= ?" \
-                "and apartment = ?" \
-                "and commercial = ?" \
-                "and detached = ?" \
-                "and duplex = ?" \
-                "and house = ?" \
-                "and loftStudio = ?" \
-                "and multiplex = ?" \
-                "and other = ?" \
-                "and quadruplex = ?" \
-                "and triplex = ?" \
-                "order by id" \
-                "limit ? offset ?"
-        cursor = connection.cursor()
-        print(type(startFrom))
-        print(type(no_records))
-        print(type(city))
-        city = '.*' if type(city) is str else city.GET.get('city')
-        district = '.*' if type(district) is str else district.GET['district']
-        print(city)
-        args = (city,
-                district,
-                minPrice,
-                maxPrice,
-                minFloorArea,
-                maxFloorArea,
-                minConstructionYear,
-                maxConstructionYear,
-                minRooms,
-                maxRooms,
-                minBedrooms,
-                maxBedrooms,
-                minBathrooms,
-                maxBathrooms,
-                minGarages,
-                maxGarages,
-                minParkingLots,
-                maxParkingLots,
-                onlyNew,
-                walkScoreThreshold,
-                apartment,
-                commercial,
-                detached,
-                house,
-                loftStudio,
-                multiplex,
-                other,
-                quadruplex,
-                triplex,
-                no_records,
-                startFrom,)
-        cursor.execute(query, args)
-        query_result = cursor.fetchall()
+        startFrom = isNoneNumeric('startFrom', 1, request)
+        count = isNoneNumeric('count', 1, request)
+        apartment_instance, no_records \
+            = self.get_object(startFrom,
+                              count,
+                              isNoneString('city', '.*', request),
+                              isNoneString('district', '.*', request),
+                              isNoneNumeric('minPrice', 0, request),
+                              isNoneNumeric('maxPrice', sys.maxsize, request),
+                              isNoneNumeric('minFloorArea', 0, request),
+                              isNoneNumeric('maxFloorArea', sys.maxsize, request),
+                              isNoneNumeric('minConstructionYear', 0, request),
+                              isNoneNumeric('maxConstructionYear', sys.maxsize, request),
+                              isNoneNumeric('minRooms', 0, request),
+                              isNoneNumeric('maxRooms', sys.maxsize, request),
+                              isNoneNumeric('minBedrooms', 0, request),
+                              isNoneNumeric('maxBedrooms', sys.maxsize, request),
+                              isNoneNumeric('minBathrooms', 0, request),
+                              isNoneNumeric('maxBathrooms', sys.maxsize, request),
+                              isNoneNumeric('minGarages', 0, request),
+                              isNoneNumeric('maxGarages', sys.maxsize, request),
+                              isNoneNumeric('minParkingLots', 0, request),
+                              isNoneNumeric('maxParkingLots', sys.maxsize, request),
+                              isNoneBoolean('onlyNew', False, request),
+                              isNoneNumeric('walkScoreThreshold', 0, request),
+                              isNoneString('sortBy', 'id', request),
+                              isNoneBoolean('sortAscending', False, request))
+        if not apartment_instance:
+            return Response(
+                {"listings": [], "totalCount": 0},
+                status=status.HTTP_200_OK
+            )
         result = []
-        for elem in query_result:
-            result.append(elem[0])
-        print(result)
-        serializer = ItemsSerializer(data={'items': result})
+        for i in range(0, count, 1):
+            result.append(apartment_instance[i])
+        serializer = ApartmentsCountSerializer(data={'listings': result, 'totalCount': no_records})
         if serializer.is_valid():
             print(serializer.data)
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ApiListingsById(APIView):
+
+    def get_object(self, id):
+        try:
+            return Apartment.objects.get(id=id)
+        except Apartment.DoesNotExist:
+            return None
+
+    def get(self, request, id, *args, **kwargs):
+        """
+        List all districts in a given city
+        """
+        apartment_instance = self.get_object(id)
+        if not apartment_instance:
+            return Response(
+                {"listings": [], "totalCount": 0},
+                status=status.HTTP_200_OK
+            )
+        serializer = ListingFull(apartment_instance)
+        return Response(serializer.data, status=status.HTTP_200_OK)
