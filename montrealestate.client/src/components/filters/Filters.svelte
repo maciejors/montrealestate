@@ -19,6 +19,18 @@
 
   $: hideDistrictSelectBox = allDistricts.length === 0;
 
+  let displayError = false;
+  const minmaxValuesValid = {
+    price: true,
+    floorArea: true,
+    constructionYear: true,
+    noRooms: true,
+    noBedrooms: true,
+    noBathrooms: true,
+    noGarages: true,
+    noParkingLots: true,
+  };
+
   const dispatch = createEventDispatcher();
 
   onMount(async () => {
@@ -41,6 +53,7 @@
   }
 
   function onResetFilters() {
+    displayError = false;
     filters.city = '';
 		filters.district = '';
 		filters.minPrice = null;
@@ -64,7 +77,19 @@
     allDistricts = [];
   }
 
-  function onApplyFilters() {    
+  function onApplyFilters() {
+    let formValid = true;
+    for (let isFieldValid of Object.values(minmaxValuesValid)) {
+      if (!isFieldValid) {
+        formValid = false;
+        break;
+      }
+    }
+    if (formValid === false) {  // form invalid
+      displayError = true;
+      return;
+    }  
+    displayError = false;
     dispatch('applyFilters', { filters: filters });
   }
 </script>
@@ -91,42 +116,50 @@
     <MinMaxFilter 
       label="Price (CAD):" 
       bind:min={filters.minPrice} 
-      bind:max={filters.maxPrice} 
+      bind:max={filters.maxPrice}
+      bind:valid={minmaxValuesValid.price}
     />
     <MinMaxFilter 
       label="Floor area (m2):" 
       bind:min={filters.minFloorArea} 
       bind:max={filters.maxFloorArea} 
+      bind:valid={minmaxValuesValid.floorArea}
     />
     <MinMaxFilter 
       label="Constr. Year:" 
       bind:min={filters.minConstructionYear} 
       bind:max={filters.maxConstructionYear} 
+      bind:valid={minmaxValuesValid.constructionYear}
     />
     <MinMaxFilter 
       label="Rooms:" 
       bind:min={filters.minRooms} 
       bind:max={filters.maxRooms} 
+      bind:valid={minmaxValuesValid.noRooms}
     />
     <MinMaxFilter 
       label="Bedrooms:" 
       bind:min={filters.minBedrooms} 
       bind:max={filters.maxBedrooms} 
+      bind:valid={minmaxValuesValid.noBedrooms}
     />
     <MinMaxFilter 
       label="Bathrooms:" 
       bind:min={filters.minBathrooms} 
       bind:max={filters.maxBathrooms} 
+      bind:valid={minmaxValuesValid.noBathrooms}
     />
     <MinMaxFilter 
       label="Garages:" 
       bind:min={filters.minGarages} 
       bind:max={filters.maxGarages} 
+      bind:valid={minmaxValuesValid.noGarages}
     />
     <MinMaxFilter 
       label="Parking lots:" 
       bind:min={filters.minParkingLots} 
       bind:max={filters.maxParkingLots} 
+      bind:valid={minmaxValuesValid.noParkingLots}
     />
     <CheckboxFilter
       label="Only new buildings"
@@ -146,5 +179,8 @@
     <button on:click={ onApplyFilters } class="btn btn-primary w-28">
       Apply filters
     </button>
+  </div>
+  <div class="flex flex-row justify-center sm:justify-end" class:hidden={!displayError}>
+    <p class="text-red-500 font-bold text-sm text-center">Max values must be greater than or equal to min values</p>
   </div>
 </section>
