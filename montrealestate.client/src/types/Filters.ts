@@ -1,6 +1,6 @@
 export interface FiltersType {
-	city: string;
-	district: string;
+	city: string | null;
+	district: string | null;
 	minPrice: number | null;
 	maxPrice: number | null;
 	minFloorArea: number | null;
@@ -18,7 +18,7 @@ export interface FiltersType {
 	minParkingLots: number | null;
 	maxParkingLots: number | null;
 	onlyNew: boolean;
-	walkScoreMapped: string | null;
+	walkScoreThreshold: string | null;
 }
 
 export class FiltersClass implements FiltersType {
@@ -41,5 +41,5 @@ export class FiltersClass implements FiltersType {
 	minParkingLots: number | null = null;
 	maxParkingLots: number | null = null;
 	onlyNew: boolean = false;
-	walkScoreMapped: string | null = null;
+	walkScoreThreshold: string | null = null;
 }

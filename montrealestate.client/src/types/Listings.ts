@@ -1,25 +1,25 @@
-export interface ListingShort {
+export interface Listing {
 	id: number;
-	imgUrl: string;
+	photoUrl: string;
 	price: number;
-	floorArea: number;
+	livingArea: number;
 	constructionYear: number;
 	city: string;
 	district: string;
 	address: string;
+	postalCode: string;
 	noRooms: number;
 	isNew: boolean;
-}
-
-export interface ListingLong extends ListingShort {
 	noBedrooms: number;
 	noBathrooms: number;
 	noGarages: number;
 	noParkingLots: number;
-	googleMapsAddressLink: string;
+	noFireplaces: number;
+	noPools: number;
+	googleMapAddressLink: string;
 	walkScore: number;
 	walkScoreMapped: string;
-	description: string;
+	longDescription: string;
 	contactEmail: string;
 	contactPhoneNumber: string;
 }

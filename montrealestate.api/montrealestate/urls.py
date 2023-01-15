@@ -16,12 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from montrealestate_app import urls as api_urls
-from montrealestate_app import listings_urls
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path('api/', include(api_urls)),
-    path('api/listings/', include(listings_urls)),
 ]

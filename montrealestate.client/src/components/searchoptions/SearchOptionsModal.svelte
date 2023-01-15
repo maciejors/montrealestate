@@ -7,7 +7,8 @@
   import copy from "../../utils/copy";
 	import { SearchOptionsClass, type SearchOptionsType } from "../../types/SearchOptions";
 
-  let availableSorting = ['price', 'floor area'];
+  let availableSorting = ['price', 'livingArea'];
+  let availableSortingLabels = ['Price', 'Floor area'];
   let availableCounts = [10, 20, 30, 50];
   
   // defaultOptions contains CURRENTLY APPLIED options
@@ -57,7 +58,8 @@
       <div class="flex flex-col sm:flex-row items-center gap-2">
         <SelectBoxFilter
           label="Sort by:"
-          items={availableSorting}
+          items={availableSortingLabels}
+          values={availableSorting}
           bind:value={options.sortBy}
         />
         <CheckboxFilter

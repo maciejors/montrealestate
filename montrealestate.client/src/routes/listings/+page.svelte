@@ -7,7 +7,7 @@
   import { filtersStore } from "../../stores/filtersStore";
   import Container from "../../components/Container.svelte";
 	import Filters from "../../components/filters/Filters.svelte";
-	import type { ListingShort } from "../../types/Listings";
+	import type { Listing } from "../../types/Listings";
 	import { getListings } from "../../database/listings";
 	import ListingCard from "../../components/listings/ListingCard.svelte";
 	import { goto } from "$app/navigation";
@@ -19,12 +19,15 @@
 	import type { SearchOptionsType } from "../../types/SearchOptions";
   import SearchOptionsModal from "../../components/searchoptions/SearchOptionsModal.svelte";
 
-  let listings: ListingShort[] = [];
+  let listings: Listing[] = [];
   let filtersVisible = false;
 
   // pagination variables:
-  let totalCount = 22;
+  let totalCount = 0;
   $: displayedCount = listings.length;
+
+  // false if no listing matches currently applied filters
+  let dataAvailable = false;
 
   function showFilters() {
     filtersVisible = true;
@@ -35,15 +38,19 @@
   }
 
   async function search(filters: FiltersType, searchOptions: SearchOptionsType) {
+    dataAvailable = true;
     listings = [];
-    setTimeout(async () => {
-      const response = await getListings(filters, searchOptions);
-      listings = response;
-    }, 1000);
+    const response = await getListings(filters, searchOptions);
+    listings = response.listings;
+    totalCount = response.totalCount;
+    if (totalCount === 0) {
+      dataAvailable = false;
+    }
   }
 
   async function onFiltersChanged(newFilters: FiltersType) {
     hideFilters();
+    totalCount = 0;
     $filtersStore = copy(newFilters);
     $searchOptionsStore.startFrom = 0;
     await search($filtersStore, $searchOptionsStore);
@@ -105,7 +112,12 @@
     >Showing {displayedCount} of {totalCount} results:</p>
   </div>
   <div class="pb-8 pt-12" class:hidden={listings.length > 0}>
-    <SpinnerLoader />
+    <div class:hidden={!dataAvailable}>
+      <SpinnerLoader />
+    </div>
+    <div class:hidden={dataAvailable}>
+      <p class="text-sm text-gray-500">No listings found</p>
+    </div>
   </div>
   <div class="flex flex-col gap-y-6 py-4">
     {#each listings as listing}

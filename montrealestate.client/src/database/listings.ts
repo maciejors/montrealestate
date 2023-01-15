@@ -1,68 +1,85 @@
+import axios from 'axios';
 import type { FiltersType } from 'src/types/Filters';
-import type { ListingLong, ListingShort } from 'src/types/Listings';
+import type { Listing } from 'src/types/Listings';
 import type { SearchOptionsType } from 'src/types/SearchOptions';
 
-export async function getAllCities() {
-	return ['montreal', 'warsaw'];
+axios.defaults.baseURL = 'http://127.0.0.1:8000';
+
+interface ListingsResponse {
+	listings: Listing[];
+	totalCount: number;
 }
 
-export async function getAllDistricts(city: string) {
-	if (city === '') {
-		return [];
+export async function getAllCities(): Promise<string[]> {
+	let result: string[] = [];
+	try {
+		const response = await axios.get(`/api/cities`);
+		result = response.data.items;
+	} catch (e) {
+		console.log(e);
 	}
-	if (city === 'warsaw') {
-		return [];
-	}
-	return ['west', 'east'];
+	return result;
 }
 
-export async function getAllWalkScoresMapped() {
-	return ['walkscore1', 'walkscore2'];
+export async function getAllDistricts(city: string): Promise<string[]> {
+	let result: string[] = [];
+	if (city === '' || city === undefined) {
+		return result;
+	}
+	try {
+		const response = await axios.get(`/api/districts`, {
+			params: { city },
+		});
+		result = response.data.items ?? [];
+	} catch (e) {
+		console.log(e);
+		return [];
+	}
+	return result;
 }
 
 export async function getListings(
 	filters: FiltersType,
 	options: SearchOptionsType,
-): Promise<ListingShort[]> {
-	const result: ListingShort[] = [];
-	for (let i = 0; i < 10; i++) {
-		result.push({
-			id: i,
-			imgUrl: 'https://picsum.photos/600/400',
-			price: 400000,
-			floorArea: 60,
-			constructionYear: 2001,
-			city: 'Montreal',
-			district: 'West',
-			address: '12 Grafton St.',
-			noRooms: 4,
-			isNew: true,
+): Promise<ListingsResponse> {
+	let result: ListingsResponse = {
+		listings: [],
+		totalCount: 0,
+	};
+	try {
+		if (filters.city === '') {
+			filters.city = null;
+		}
+		if (filters.district === '') {
+			filters.district = null;
+		}
+		const response = await axios.get(`/api/listings`, {
+			params: {
+				startFrom: options.startFrom,
+				count: options.count,
+				sortBy: options.sortBy,
+				sortAscending: options.sortAscending,
+				...filters,
+			},
 		});
+		result.listings = response.data.listings;
+		result.totalCount = response.data.totalCount;
+	} catch (e) {
+		console.log(e);
 	}
 	return result;
 }
 
-export async function getListingDetails(listingId: number): Promise<ListingLong> {
-	return {
-		id: 1,
-		imgUrl: 'https://picsum.photos/600/400',
-		price: 400000,
-		floorArea: 60,
-		constructionYear: 2001,
-		city: 'Montreal',
-		district: 'West',
-		address: '12 Grafton St.',
-		noRooms: 4,
-		isNew: true,
-		noBedrooms: 1,
-		noBathrooms: 1,
-		noGarages: 1,
-		noParkingLots: 4,
-		googleMapsAddressLink: 'https://maps.google.com',
-		walkScore: 99,
-		walkScoreMapped: 'walkscore 1',
-		description: 'Glorious ruins in the heart of Montreal! Buy today!!!!',
-		contactEmail: 'ilovebees@mail.com',
-		contactPhoneNumber: '+353 123 456 789',
-	};
+export async function getListingDetails(listingId: number): Promise<Listing | null> {
+	let result: Listing | null = null;
+	try {
+		const response = await axios.get(`/api/listings/${listingId}`);
+		result = response.data;
+		if (result !== null) {
+			result.photoUrl = 'https://picsum.photos/900/600';
+		}
+	} catch (e) {
+		console.log(e);
+	}
+	return result;
 }

@@ -96,7 +96,7 @@ class ApiListings(APIView):
                    walkScoreThreshold,
                    sortBy,
                    sortAscending):
-        sortBy = sortBy if sortAscending is True else ('-' + sortBy)
+        sortBy = sortBy if not sortAscending else ('-' + sortBy)
         listings = Apartment.objects \
                        .filter(city__iregex='^' + city + '$') \
                        .filter(district__iregex='^' + district + '$') \
