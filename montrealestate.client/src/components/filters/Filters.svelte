@@ -3,8 +3,7 @@
   import MinMaxFilter from "./MinMaxFilter.svelte";
   import SelectBoxFilter from "./SelectBoxFilter.svelte";
   import CheckboxFilter from "./CheckboxFilter.svelte";
-  import CategorySelectFilter from "./CategorySelectFilter.svelte";
-	import { getAllCategories, getAllCities, getAllDistricts, getAllWalkScoresMapped } from "../../database/listings";
+	import { getAllCities, getAllDistricts } from "../../database/listings";
 	import { FiltersClass, type FiltersType } from "../../types/Filters";
   import copy from "../../utils/copy";
 
@@ -15,8 +14,8 @@
   let filters: FiltersType = new FiltersClass();
   let allCities: string[] = [];
   let allDistricts: string[] = [];
-  let allWalkScoresMapped: string[] = [];
-  let allCategories: string[] = [];
+  let allWalkScoresDesc = ['Car-dependent', 'Somewhat walkable', 'Very walkable', "Walker's paradise"];
+  let allWalkScoreThresholds = [0, 50, 70, 90];
 
   $: hideDistrictSelectBox = allDistricts.length === 0;
 
@@ -28,11 +27,6 @@
     const currCity = filters.city;
     if (currCity !== null) {
       allDistricts = await getAllDistricts(currCity);
-    }
-    allWalkScoresMapped = await getAllWalkScoresMapped();
-    allCategories = await getAllCategories();
-    if (filters.categories.length === 0) {
-      filters.categories = [...allCategories];
     }
   });
 
@@ -49,7 +43,6 @@
   function onResetFilters() {
     filters.city = '';
 		filters.district = '';
-		filters.categories = [...allCategories];
 		filters.minPrice = null;
 		filters.maxPrice = null;
 		filters.minFloorArea = null;
@@ -67,11 +60,11 @@
 		filters.minParkingLots = null;
 		filters.maxParkingLots = null;
 		filters.onlyNew = false;
-		filters.walkScoreMapped = null;
+		filters.walkScoreThreshold = null;
     allDistricts = [];
   }
 
-  function onApplyFilters() {
+  function onApplyFilters() {    
     dispatch('applyFilters', { filters: filters });
   }
 </script>
@@ -80,24 +73,21 @@
   <div class="grid gap-y-4 gap-x-20 items-center
     grid-cols-1 xl:grid-cols-2"
   >
-    <div class="flex flex-row justify-between gap-x-2">
+    <div class:xl:col-span-2={hideDistrictSelectBox}>
       <SelectBoxFilter 
         label="City:"
         items={allCities}
         bind:value={filters.city}
         on:valueChanged={onCityChange}
       />
+    </div>
+    <div class:hidden={hideDistrictSelectBox}>
       <SelectBoxFilter 
         label="District:"
         items={allDistricts}
         bind:value={filters.district}
-        bind:hidden={hideDistrictSelectBox}
       />
     </div>
-    <CategorySelectFilter
-      bind:categories={allCategories}
-      bind:appliedCategories={filters.categories}
-    />
     <MinMaxFilter 
       label="Price (CAD):" 
       bind:min={filters.minPrice} 
@@ -144,8 +134,9 @@
     />
     <SelectBoxFilter 
       label="WalkScore:"
-      items={allWalkScoresMapped}
-      bind:value={filters.walkScoreMapped}
+      items={allWalkScoresDesc}
+      values={allWalkScoreThresholds}
+      bind:value={filters.walkScoreThreshold}
     />
   </div>
   <div class="flex flex-row justify-center sm:justify-end gap-x-3 mt-4">
