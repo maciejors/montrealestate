@@ -16,7 +16,7 @@ def isNoneNumeric(x, default, request):
 
 def isNoneBoolean(x, default, request):
     tmp = request.GET.get(x)
-    return tmp == 'True' if tmp is not None else default
+    return tmp == 'true' if tmp is not None else default
 
 
 def isNoneString(x, default, request):
@@ -35,14 +35,11 @@ class ApiCitiesView(APIView):
         cursor = connection.cursor()
         cursor.execute(query)
         query_result = cursor.fetchall()
-        print(query_result)
         result = []
         for elem in query_result:
             result.append(elem[0])
-        print(result)
         serializer = ItemsSerializer(data={'items': result})
         if serializer.is_valid():
-            print(serializer.data)
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -61,18 +58,16 @@ class ApiDistrictsView(APIView):
         result = []
         for elem in query_result:
             result.append(elem[0])
-        print(result)
         serializer = ItemsSerializer(data={'items': result})
         if serializer.is_valid():
-            print(serializer.data)
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ApiListings(APIView):
 
-    def get_object(self,
-                   startFrom,
+    @staticmethod
+    def get_object(startFrom,
                    count,
                    city,
                    district,
@@ -96,30 +91,8 @@ class ApiListings(APIView):
                    walkScoreThreshold,
                    sortBy,
                    sortAscending):
-        sortBy = sortBy if not sortAscending else ('-' + sortBy)
-        listings = Apartment.objects \
-                       .filter(city__iregex='^' + city + '$') \
-                       .filter(district__iregex='^' + district + '$') \
-                       .filter(price__gte=minPrice) \
-                       .filter(price__lte=maxPrice) \
-                       .filter(livingArea__gte=minFloorArea) \
-                       .filter(livingArea__lte=maxFloorArea) \
-                       .filter(constructionYear__gte=minConstructionYear) \
-                       .filter(constructionYear__lte=maxConstructionYear) \
-                       .filter(noRooms__gte=minRooms) \
-                       .filter(noRooms__lte=maxRooms) \
-                       .filter(noBedrooms__gte=minBedrooms) \
-                       .filter(noBedrooms__lte=maxBedrooms) \
-                       .filter(noBathrooms__gte=minBathrooms) \
-                       .filter(noBathrooms__lte=maxBathrooms) \
-                       .filter(noGarages__gte=minGarages) \
-                       .filter(noGarages__lte=maxGarages) \
-                       .filter(noParkingLots__gte=minParkingLots) \
-                       .filter(noParkingLots__lte=maxParkingLots) \
-                       .filter(isNew=onlyNew) \
-                       .filter(walkScore__gte=walkScoreThreshold) \
-                       .order_by(sortBy).values()[startFrom:(startFrom + count)]
-        no_listings = Apartment.objects \
+        sortBy = sortBy if sortAscending else ('-' + sortBy)
+        base_query = Apartment.objects \
             .filter(city__iregex='^' + city + '$') \
             .filter(district__iregex='^' + district + '$') \
             .filter(price__gte=minPrice) \
@@ -138,9 +111,11 @@ class ApiListings(APIView):
             .filter(noGarages__lte=maxGarages) \
             .filter(noParkingLots__gte=minParkingLots) \
             .filter(noParkingLots__lte=maxParkingLots) \
-            .filter(isNew=onlyNew) \
-            .filter(walkScore__gte=walkScoreThreshold) \
-            .count()
+            .filter(walkScore__gte=walkScoreThreshold)
+        if onlyNew:
+            base_query = base_query.filter(isNew=onlyNew)
+        listings = base_query.order_by(sortBy).values()[startFrom:(startFrom + count)]
+        no_listings = base_query.count()
         try:
             return listings, no_listings
         except Apartment.DoesNotExist:
@@ -176,7 +151,7 @@ class ApiListings(APIView):
                               isNoneBoolean('onlyNew', False, request),
                               isNoneNumeric('walkScoreThreshold', 0, request),
                               isNoneString('sortBy', 'id', request),
-                              isNoneBoolean('sortAscending', False, request))
+                              isNoneBoolean('sortAscending', True, request))
         if not apartment_instance:
             return Response(
                 {"listings": [], "totalCount": 0},
@@ -187,7 +162,6 @@ class ApiListings(APIView):
             result.append(apartment_instance[i])
         serializer = ApartmentsCountSerializer(data={'listings': result, 'totalCount': no_records})
         if serializer.is_valid():
-            print(serializer.data)
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
