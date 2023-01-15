@@ -119,7 +119,7 @@
       <p class="text-sm text-gray-500">No listings found</p>
     </div>
   </div>
-  <div class="flex flex-col gap-y-6 py-4">
+  <div class="flex flex-col gap-y-6 py-4 items-center">
     {#each listings as listing}
       <ListingCard { listing } on:click={() => viewListingDetails(listing.id)} />
     {/each}

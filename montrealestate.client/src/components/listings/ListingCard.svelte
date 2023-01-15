@@ -12,7 +12,7 @@
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<div class="card flex flex-col overflow-hidden
+<div class="card flex flex-col overflow-hidden w-full
   cursor-pointer"
   on:click={() => dispatch('click')}
 >

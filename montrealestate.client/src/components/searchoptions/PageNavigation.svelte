@@ -11,16 +11,16 @@
   $: totalPages = Math.ceil(totalCount / count);
 
   function prevPage() {
-    dispatch('pageChanged');
     if (startFrom >= count) {
       startFrom -= count;
+      dispatch('pageChanged');
     }
   }
 
   function nextPage() {
-    dispatch('pageChanged');
     if (startFrom + count < totalCount) {
       startFrom += count;
+      dispatch('pageChanged');
     }
   }
 </script>
