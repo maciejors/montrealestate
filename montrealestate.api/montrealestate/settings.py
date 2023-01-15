@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'django_extensions',
     'rest_framework',
     'montrealestate_app',
-    'django_filters',
 ]
 
 MIDDLEWARE = [
