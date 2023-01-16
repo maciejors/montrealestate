@@ -32,7 +32,7 @@
 
 {#if listing !== undefined}
   <Container>
-    <div class="card my-10 flex flex-col pb-4">
+    <div class="card my-10 flex flex-col pb-4 max-w-5xl">
       <section class="flex flex-col relative
         lg:grid lg:grid-cols-12 lg:bg-gray-50"
       >
@@ -84,7 +84,9 @@
           {#if listing.isNew}
             <li><b>New building</b></li>
           {/if}
-          <li>Construction year: <b>{ listing.constructionYear }</b></li>
+          {#if listing.constructionYear !== 0}
+            <li>Construction year: <b>{ listing.constructionYear }</b></li>
+          {/if}
           <li>WalkScore: { listing.walkScore }/100 <b>({ listing.walkScoreMapped })</b></li>
         </ul>
       </section>
