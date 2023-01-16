@@ -12,7 +12,7 @@
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<div class="card flex flex-col overflow-hidden w-full
+<div class="card flex flex-col overflow-hidden max-w-[600px]
   cursor-pointer"
   on:click={() => dispatch('click')}
 >
@@ -20,7 +20,10 @@
   <div class="flex flex-col p-4">
     <p class="text-3xl mb-1">${ listing.price }</p>
     <p class="text-xl">
-      { listing.address }, { districtPrefix }{ listing.city }
+      { listing.address }
+    </p>
+    <p class="text-lg text-gray-700">
+      { districtPrefix }{ listing.city }
     </p>
     <div class="flex flex-row text-gray-500 flex-wrap gap-x-1 items-center mt-2">
       <p>{ listing.livingArea } m2</p>
