@@ -3,6 +3,9 @@ from .models import Apartment
 
 
 class ListingFull(serializers.ModelSerializer):
+    city = serializers.CharField(source="cityId.cityName")
+    district = serializers.CharField(source="districtId.districtName")
+
     class Meta:
         model = Apartment
         fields = ['id',

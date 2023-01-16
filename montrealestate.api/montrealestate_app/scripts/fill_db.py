@@ -3,6 +3,32 @@ import csv
 
 
 def run():
+    with open('./cities.csv', encoding='utf16') as file:
+        reader = csv.reader(file)
+        next(reader)
+
+        m.CityMap.objects.all().delete()
+
+        for row in reader:
+            cityMap = m.CityMap(
+                cityName=row[0],
+                cityId=row[1],
+            )
+            cityMap.save()
+
+    with open('./districts.csv', encoding='utf16') as file:
+        reader = csv.reader(file)
+        next(reader)
+
+        m.DistrictMap.objects.all().delete()
+
+        for row in reader:
+            districtMap = m.DistrictMap(
+                districtName=row[0],
+                districtId=row[1],
+            )
+            districtMap.save()
+
     with open('./listings_final.csv', encoding='utf16') as file:
         reader = csv.reader(file)
         next(reader)
@@ -12,8 +38,8 @@ def run():
         for row in reader:
             apartment = m.Apartment(
                 address=row[0],
-                city=row[1],
-                district=row[2],
+                cityId_id=row[1],
+                districtId_id=row[2],
                 postalCode=row[3],
                 longDescription=row[4],
                 price=row[5],

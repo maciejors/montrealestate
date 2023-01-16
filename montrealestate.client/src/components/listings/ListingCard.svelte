@@ -1,9 +1,9 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
-	import type { ListingShort } from "../../types/Listings";
+	import type { Listing } from "../../types/Listings";
   import InlineTextSeparator from "../InlineTextSeparator.svelte";
 
-  export let listing: ListingShort;
+  export let listing: Listing;
 
   const dispatch = createEventDispatcher();
 
@@ -12,30 +12,31 @@
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<div class="card flex flex-col overflow-hidden
+<div class="card flex flex-col overflow-hidden max-w-[600px]
   cursor-pointer"
   on:click={() => dispatch('click')}
 >
-  <img src={ listing.imgUrl } alt={ listing.imgUrl }>
+  <img src={ listing.photoUrl } alt={ listing.photoUrl }>
   <div class="flex flex-col p-4">
     <p class="text-3xl mb-1">${ listing.price }</p>
     <p class="text-xl">
-      { listing.address }, { districtPrefix }{ listing.city }
+      { listing.address }
+    </p>
+    <p class="text-lg text-gray-700">
+      { districtPrefix }{ listing.city }
     </p>
     <div class="flex flex-row text-gray-500 flex-wrap gap-x-1 items-center mt-2">
-      <p>{ listing.floorArea } m2</p>
+      <p>{ listing.livingArea } m2</p>
       <InlineTextSeparator />
       <p>built in { listing.constructionYear }</p>
-      <InlineTextSeparator />
-      <p>{ listing.noRooms } room(s)</p>
+      {#if listing.noRooms > 0}
+        <InlineTextSeparator />
+        <p>{ listing.noRooms } room(s)</p>
+      {/if}
       {#if listing.isNew}
         <InlineTextSeparator />
         <p>new building</p>
       {/if}
-      {#each listing.categories as category}
-        <InlineTextSeparator />
-        <p>{ category }</p>
-      {/each}
     </div>
   </div>
 </div>
