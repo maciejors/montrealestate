@@ -3,7 +3,7 @@ import type { FiltersType } from 'src/types/Filters';
 import type { Listing } from 'src/types/Listings';
 import type { SearchOptionsType } from 'src/types/SearchOptions';
 
-axios.defaults.baseURL = 'http://127.0.0.1:8000';
+axios.defaults.baseURL = 'http://51.68.142.9:8000';
 
 interface ListingsResponse {
 	listings: Listing[];
