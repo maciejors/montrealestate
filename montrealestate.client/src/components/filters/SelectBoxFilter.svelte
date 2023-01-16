@@ -30,7 +30,7 @@
     bind:value={value} 
     on:change={() => dispatch('valueChanged')} 
     class="py-0 h-8 cursor-pointer rounded border-1 focus:border-primary focus:ring-primary
-      hover:bg-gray-100"
+      hover:bg-gray-100 w-full max-w-max"
   >
     {#each options as option}
       <option value={option.value}>{ option.label }</option>
