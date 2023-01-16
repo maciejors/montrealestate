@@ -13,8 +13,8 @@ class DistrictMap(models.Model):
 
 class Apartment(models.Model):
     address = models.CharField(max_length=255)
-    cityId = models.ForeignKey(CityMap, on_delete=models.CASCADE)
-    districtId = models.ForeignKey(DistrictMap, on_delete=models.CASCADE)
+    city = models.ForeignKey(CityMap, on_delete=models.CASCADE)
+    district = models.ForeignKey(DistrictMap, on_delete=models.CASCADE)
     postalCode = models.CharField(max_length=255)
     longDescription = models.TextField(default='')
     price = models.FloatField(default=0)

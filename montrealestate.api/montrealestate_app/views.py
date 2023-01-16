@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Apartment
+from .models import Apartment, CityMap, DistrictMap
 from .serializers import ItemsSerializer, ListingFull, ApartmentsCountSerializer
 
 
@@ -53,8 +53,8 @@ class ApiDistrictsView(APIView):
         connection = sqlite3.connect("db.sqlite3")
         cursor = connection.cursor()
         cursor.execute("select distinct districtName from montrealestate_app_apartment maa join "
-                       "montrealestate_app_citymap mac on mac.cityId = maa.cityId_id join "
-                       "montrealestate_app_districtmap mad on mad.districtId = maa.districtId_id "
+                       "montrealestate_app_citymap mac on mac.cityId = maa.city_id join "
+                       "montrealestate_app_districtmap mad on mad.districtId = maa.district_id "
                        "where cityName = ?",
                        [city.GET['city']])
         query_result = cursor.fetchall()
@@ -96,8 +96,8 @@ class ApiListings(APIView):
                    sortAscending):
         sortBy = sortBy if sortAscending else ('-' + sortBy)
         base_query = Apartment.objects \
-            .filter(cityId__cityName__iregex='^' + city + '$') \
-            .filter(districtId__districtName__iregex='^' + district + '$') \
+            .filter(city_id__cityName__iregex='^' + city + '$') \
+            .filter(district_id__districtName__iregex='^' + district + '$') \
             .filter(price__gte=minPrice) \
             .filter(price__lte=maxPrice) \
             .filter(livingArea__gte=minFloorArea) \
@@ -116,7 +116,7 @@ class ApiListings(APIView):
             .filter(noParkingLots__lte=maxParkingLots) \
             .filter(walkScore__gte=walkScoreThreshold)
         if onlyNew:
-            base_query = base_query.filter(isNew=onlyNew)
+            base_query = base_query.filter(isNew=onlyNew).all()
         listings = base_query.order_by(sortBy).values()[startFrom:(startFrom + count)]
         no_listings = base_query.count()
         try:
@@ -160,9 +160,17 @@ class ApiListings(APIView):
                 {"listings": [], "totalCount": 0},
                 status=status.HTTP_200_OK
             )
+        print(apartment_instance.values())
+
         result = []
-        for i in range(0, count, 1):
-            result.append(apartment_instance[i])
+        for elem in apartment_instance:
+            id_city = elem['city_id']
+            id_district = elem['district_id']
+            elem['city'] = CityMap.objects.filter(cityId=id_city) \
+                .values('cityName').get()['cityName']
+            elem['district'] = DistrictMap.objects.filter(districtId=id_district) \
+                .values('districtName').get()['districtName']
+            result.append(elem)
         serializer = ApartmentsCountSerializer(data={'listings': result, 'totalCount': no_records})
         if serializer.is_valid():
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -187,5 +195,6 @@ class ApiListingsById(APIView):
                 {"listings": [], "totalCount": 0},
                 status=status.HTTP_200_OK
             )
+        print(apartment_instance)
         serializer = ListingFull(apartment_instance)
         return Response(serializer.data, status=status.HTTP_200_OK)
