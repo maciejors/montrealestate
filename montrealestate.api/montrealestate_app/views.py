@@ -160,8 +160,6 @@ class ApiListings(APIView):
                 {"listings": [], "totalCount": 0},
                 status=status.HTTP_200_OK
             )
-        print(apartment_instance.values())
-
         result = []
         for elem in apartment_instance:
             id_city = elem['city_id']
@@ -195,6 +193,5 @@ class ApiListingsById(APIView):
                 {"listings": [], "totalCount": 0},
                 status=status.HTTP_200_OK
             )
-        print(apartment_instance)
         serializer = ListingFull(apartment_instance)
         return Response(serializer.data, status=status.HTTP_200_OK)
