@@ -42,7 +42,7 @@
 </script>
 
 <div class="flex flex-row items-center gap-x-2">
-  <button class="btn btn-secondary border border-gray-500 bg-white hover:bg-gray-100 rounded px-2 h-8" on:click={showModal}>{ buttonLabel }</button>
+  <button class="btn btn-secondary border border-gray-500 bg-white hover:bg-gray-100 rounded px-2" on:click={showModal}>{ buttonLabel }</button>
 </div>
 <Modal visible={modalVisible}>
   <div class="card flex flex-col justify-center items-center p-4">

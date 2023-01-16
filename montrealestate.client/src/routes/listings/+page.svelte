@@ -100,7 +100,7 @@
 </section>
 <Container>
   <div class="flex flex-col items-center w-full mt-2 gap-y-1
-      md:flex-row md:justify-start">
+      md:flex-row md:justify-center md:px-10">
     <PageNavigation 
       bind:startFrom={$searchOptionsStore.startFrom} 
       count={$searchOptionsStore.count} 

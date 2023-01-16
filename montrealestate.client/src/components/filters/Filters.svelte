@@ -173,10 +173,10 @@
     />
   </div>
   <div class="flex flex-row justify-center sm:justify-end gap-x-3 mt-4">
-    <button on:click={ onResetFilters } class="btn btn-secondary w-28">
+    <button on:click={ onResetFilters } class="btn btn-secondary w-32">
       Clear filters
     </button>
-    <button on:click={ onApplyFilters } class="btn btn-primary w-28">
+    <button on:click={ onApplyFilters } class="btn btn-primary w-32">
       Apply filters
     </button>
   </div>
