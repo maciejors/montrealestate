@@ -27,8 +27,10 @@
     </p>
     <div class="flex flex-row text-gray-500 flex-wrap gap-x-1 items-center mt-2">
       <p>{ listing.livingArea } m2</p>
-      <InlineTextSeparator />
-      <p>built in { listing.constructionYear }</p>
+      {#if listing.constructionYear !== 0}
+        <InlineTextSeparator />
+        <p>built in { listing.constructionYear }</p>
+      {/if}
       {#if listing.noRooms > 0}
         <InlineTextSeparator />
         <p>{ listing.noRooms } room(s)</p>
