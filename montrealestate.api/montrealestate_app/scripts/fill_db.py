@@ -38,8 +38,8 @@ def run():
         for row in reader:
             apartment = m.Apartment(
                 address=row[0],
-                cityId_id=row[1],
-                districtId_id=row[2],
+                city_id=row[1],
+                district_id=row[2],
                 postalCode=row[3],
                 longDescription=row[4],
                 price=row[5],

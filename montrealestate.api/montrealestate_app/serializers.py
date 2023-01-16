@@ -3,8 +3,8 @@ from .models import Apartment
 
 
 class ListingFull(serializers.ModelSerializer):
-    city = serializers.CharField(source="cityId.cityName")
-    district = serializers.CharField(source="districtId.districtName")
+    city = serializers.CharField(source="city.cityName")
+    district = serializers.CharField(source="district.districtName")
 
     class Meta:
         model = Apartment
