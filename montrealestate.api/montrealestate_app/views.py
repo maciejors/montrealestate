@@ -31,7 +31,7 @@ class ApiCitiesView(APIView):
         List all distinct cities
         """
         connection = sqlite3.connect("db.sqlite3")
-        query = "SELECT DISTINCT CITY FROM MONTREALESTATE_APP_APARTMENT"
+        query = "SELECT DISTINCT CITYNAME FROM MONTREALESTATE_APP_CITYMAP"
         cursor = connection.cursor()
         cursor.execute(query)
         query_result = cursor.fetchall()
@@ -52,7 +52,10 @@ class ApiDistrictsView(APIView):
         """
         connection = sqlite3.connect("db.sqlite3")
         cursor = connection.cursor()
-        cursor.execute("SELECT DISTINCT DISTRICT FROM MONTREALESTATE_APP_APARTMENT WHERE CITY = ?",
+        cursor.execute("select distinct districtName from montrealestate_app_apartment maa join "
+                       "montrealestate_app_citymap mac on mac.cityId = maa.cityId_id join "
+                       "montrealestate_app_districtmap mad on mad.districtId = maa.districtId_id "
+                       "where cityName = ?",
                        [city.GET['city']])
         query_result = cursor.fetchall()
         result = []
@@ -93,8 +96,8 @@ class ApiListings(APIView):
                    sortAscending):
         sortBy = sortBy if sortAscending else ('-' + sortBy)
         base_query = Apartment.objects \
-            .filter(city__iregex='^' + city + '$') \
-            .filter(district__iregex='^' + district + '$') \
+            .filter(cityId__cityName__iregex='^' + city + '$') \
+            .filter(districtId__districtName__iregex='^' + district + '$') \
             .filter(price__gte=minPrice) \
             .filter(price__lte=maxPrice) \
             .filter(livingArea__gte=minFloorArea) \
@@ -176,7 +179,7 @@ class ApiListingsById(APIView):
 
     def get(self, request, id, *args, **kwargs):
         """
-        List all districts in a given city
+        Return a listing with a specific id
         """
         apartment_instance = self.get_object(id)
         if not apartment_instance:
